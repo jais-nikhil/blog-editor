@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, TrendingUp } from 'lucide-react';
 import type { BigFactData } from '../../types';
 
 interface BigFactSubCardProps {
@@ -42,7 +42,10 @@ const BigFactSubCard: React.FC<BigFactSubCardProps> = ({ data, onUpdate, onDelet
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-orange-800 mb-3">Big Fact</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <TrendingUp className="h-4 w-4 text-orange-600" />
+        <h4 className="text-sm font-bold text-orange-800">Big Fact</h4>
+      </div>
       
       {/* Inline layout */}
       <div className="flex space-x-3">

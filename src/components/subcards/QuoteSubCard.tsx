@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, Quote as QuoteIcon } from 'lucide-react';
 import type { QuoteData } from '../../types';
 
 interface QuoteSubCardProps {
@@ -41,7 +41,10 @@ const QuoteSubCard: React.FC<QuoteSubCardProps> = ({ data, onUpdate, onDelete, o
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-gray-800 mb-3">Quote</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <QuoteIcon className="h-4 w-4 text-gray-600" />
+        <h4 className="text-sm font-bold text-gray-800">Quote</h4>
+      </div>
       
       <div className="space-y-3">
         <div>

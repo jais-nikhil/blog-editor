@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, MessageCircle } from 'lucide-react';
 import type { BlurpData } from '../../types';
 
 interface BlurpSubCardProps {
@@ -42,7 +42,10 @@ const BlurpSubCard: React.FC<BlurpSubCardProps> = ({ data, onUpdate, onDelete, o
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-purple-800 mb-3">Blurp</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <MessageCircle className="h-4 w-4 text-purple-600" />
+        <h4 className="text-sm font-bold text-purple-800">Blurp</h4>
+      </div>
       
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, MessageSquare } from 'lucide-react';
 import type { QAData } from '../../types';
 
 interface QASubCardProps {
@@ -41,7 +41,10 @@ const QASubCard: React.FC<QASubCardProps> = ({ data, onUpdate, onDelete, onMoveU
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-teal-800 mb-3">Q & A</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <MessageSquare className="h-4 w-4 text-teal-600" />
+        <h4 className="text-sm font-bold text-teal-800">Q & A</h4>
+      </div>
       
       <div className="space-y-3">
         <div>

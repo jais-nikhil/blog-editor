@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, HelpCircle } from 'lucide-react';
 import type { QuestionData } from '../../types';
 
 interface QuestionSubCardProps {
@@ -42,7 +42,10 @@ const QuestionSubCard: React.FC<QuestionSubCardProps> = ({ data, onUpdate, onDel
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-indigo-800 mb-3">Question</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <HelpCircle className="h-4 w-4 text-indigo-600" />
+        <h4 className="text-sm font-bold text-indigo-800">Question</h4>
+      </div>
       
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

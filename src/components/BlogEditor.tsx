@@ -6,6 +6,8 @@ import { Plus } from 'lucide-react';
 import type { Card as CardType, BlogEditorState, SubCard } from '../types';
 import { Card } from './';
 import { generateId } from '../utils/helpers';
+import { validateSubcard, isSubcardEmpty, type ValidationError } from '../utils/validation';
+import ValidationErrors from './ValidationErrors';
 
 const BlogEditor: React.FC = () => {
   const [state, setState] = useState<BlogEditorState>({
@@ -18,6 +20,8 @@ const BlogEditor: React.FC = () => {
       },
     ],
   });
+
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
   const addCard = useCallback(() => {
     const newCard: CardType = {
@@ -164,51 +168,64 @@ const BlogEditor: React.FC = () => {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    // Filter out empty cards and subcards
-    const filteredCards = state.cards
-      .map(card => ({
-        ...card,
-        subcards: card.subcards.filter(subcard => {
-          // Check if subcard has any meaningful data
-          return Object.values(subcard.data).some(value => 
-            typeof value === 'string' ? value.trim() !== '' : Boolean(value)
-          );
-        }),
-      }))
-      .filter(card => card.content.trim() !== '' || card.subcards.length > 0);
+    // Step 1: Validate all subcards and collect errors
+    const allErrors: ValidationError[] = [];
+    
+    state.cards.forEach(card => {
+      card.subcards.forEach(subcard => {
+        const errors = validateSubcard(subcard);
+        allErrors.push(...errors);
+      });
+    });
 
-    if (filteredCards.length === 0) {
-      alert('Please add some content before submitting.');
+    // Step 2: If there are validation errors, show them and stop
+    if (allErrors.length > 0) {
+      setValidationErrors(allErrors);
       return;
     }
 
-    const hasEmptyContent = state.cards.some(card => 
-      card.content.trim() === '' && card.subcards.length === 0
-    ) || state.cards.some(card =>
-      card.subcards.some(subcard =>
-        !Object.values(subcard.data).some(value => 
-          typeof value === 'string' ? value.trim() !== '' : Boolean(value)
-        )
-      )
-    );
+    // Step 3: Remove completely empty subcards
+    const filteredCards = state.cards
+      .map(card => ({
+        ...card,
+        subcards: card.subcards.filter(subcard => !isSubcardEmpty(subcard)),
+      }))
+      .filter(card => card.content.trim() !== '' || card.subcards.length > 0);
 
-    if (hasEmptyContent) {
-      const confirmed = window.confirm(
-        'Some cards or subcards are empty and will be removed. Do you want to continue?'
-      );
-      
-      if (!confirmed) {
-        return;
-      }
+    // Step 4: Check if there's any content at all
+    if (filteredCards.length === 0) {
+      setValidationErrors([{
+        subcardId: 'general',
+        subcardType: 'general',
+        field: 'content',
+        message: 'Please add some content before submitting.',
+      }]);
+      return;
     }
 
-    // Update state with filtered cards
+    // Step 5: Clear any previous errors and update state
+    setValidationErrors([]);
     setState(prev => ({ ...prev, cards: filteredCards }));
     
-    // Here you would typically send the data to your backend
+    // Step 6: Submit the data
     console.log('Submitted data:', { cards: filteredCards });
     alert('Blog content submitted successfully!');
+    
+    // Here you would typically send the data to your backend
+    // Example: await fetch('/api/blog', { method: 'POST', body: JSON.stringify({ cards: filteredCards }) });
   }, [state.cards]);
+
+  const handleScrollToError = useCallback((subcardId: string) => {
+    const element = document.querySelector(`[data-subcard-id="${subcardId}"]`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Add a highlight effect
+      element.classList.add('ring-2', 'ring-red-500', 'ring-offset-2');
+      setTimeout(() => {
+        element.classList.remove('ring-2', 'ring-red-500', 'ring-offset-2');
+      }, 2000);
+    }
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -248,6 +265,13 @@ const BlogEditor: React.FC = () => {
           Submit Blog
         </button>
       </div>
+
+      {/* Validation Errors Display */}
+      <ValidationErrors
+        errors={validationErrors}
+        onClose={() => setValidationErrors([])}
+        onScrollToError={handleScrollToError}
+      />
     </div>
   );
 };

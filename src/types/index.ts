@@ -93,7 +93,8 @@ export interface QuoteData {
 
 export interface EmbedData {
   embedCode: string;
-  type: 'video' | 'iframe' | 'other';
+  type?: 'video' | 'iframe' | 'other';
+  platform?: 'youtube' | 'vimeo' | 'twitter' | 'instagram' | 'linkedin' | 'unknown';
 }
 
 export interface TableData {

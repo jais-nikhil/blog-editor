@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Plus, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, Plus, X, ChevronUp, ChevronDown, List } from 'lucide-react';
 import type { SummaryData } from '../../types';
 
 interface SummarySubCardProps {
@@ -60,7 +60,10 @@ const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelet
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-yellow-800 mb-3">Summary</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <List className="h-4 w-4 text-yellow-600" />
+        <h4 className="text-sm font-bold text-yellow-800">Summary</h4>
+      </div>
       
       <div className="space-y-3">
         <div>

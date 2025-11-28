@@ -2,6 +2,31 @@
 
 A comprehensive ReactJS + Vite + Tailwind CSS application for creating rich blog content with multiple content types and drag-and-drop functionality.
 
+## ✨ What's New (v2.0.0)
+
+### 🎬 Smart Embed Component
+
+Auto-detect and embed content from major platforms:
+
+- **YouTube**: Paste any YouTube URL for instant video embed
+- **Vimeo**: Support for Vimeo video embeds
+- **Twitter/X**: Embed tweets with live rendering
+- **Instagram**: Display Instagram posts and reels
+- **LinkedIn**: Embed LinkedIn posts
+- Live preview with automatic platform detection
+- Clean code storage (no script duplication)
+
+### ✅ Intelligent Validation System
+
+- **Smart Empty Detection**: Empty subcards removed automatically
+- **Partial Content Validation**: Only validates fields with content
+- **Beautiful Error Display**: Floating panel with actionable errors
+- **Click-to-Navigate**: Scroll directly to any validation error
+- **Field-Specific Rules**: Custom validation for all 13 content types
+- **No More Alerts**: Replaced blocking alerts with elegant error UI
+
+**See [NEW_FEATURES.md](./NEW_FEATURES.md) for detailed documentation.**
+
 ## Features
 
 ### Core Functionality
@@ -208,3 +233,85 @@ export default defineConfig([
   },
 ]);
 ```
+
+## 📚 Documentation
+
+### Complete Guides
+
+- **[NEW_FEATURES.md](./NEW_FEATURES.md)** - Detailed feature documentation with examples
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - 15 comprehensive test scenarios
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - Quick lookup for common tasks
+- **[SUMMARY.md](./SUMMARY.md)** - Executive summary of v2.0 updates
+
+### Quick Links
+
+- **Embed Component**: Support for YouTube, Vimeo, X, Instagram, LinkedIn
+- **Validation System**: Smart validation with beautiful error displays
+- **All Subcard Types**: Text, Blockquote, CTA, Big Fact, Blurp, Question, Q&A, Summary, Image, Also Read, Quote, Embed, Table
+
+## 🧪 Testing
+
+Run the test scenarios from [TESTING_GUIDE.md](./TESTING_GUIDE.md):
+
+```bash
+# Start dev server
+npm run dev
+
+# Test embed detection
+# 1. Add Embed subcard
+# 2. Paste: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+# 3. See auto-detection and live preview
+
+# Test validation
+# 1. Add CTA with title only (no URL)
+# 2. Click Submit Blog
+# 3. See validation panel with errors
+# 4. Click error to scroll to field
+```
+
+## 🎯 Key Features in Detail
+
+### Smart Embed Detection
+
+```typescript
+// Supported formats:
+- YouTube: URLs, short links, embed codes
+- Vimeo: URLs, player iframes
+- Twitter/X: Tweet URLs, blockquote embeds
+- Instagram: Post/reel URLs, media embeds
+- LinkedIn: Post URLs, feed iframes
+```
+
+### Validation Rules
+
+- **Empty subcards**: Removed silently (no errors)
+- **Partial content**: Validated with clear error messages
+- **URL fields**: Must start with http:// or https://
+- **Image alt text**: Required for accessibility
+- **All 13 types**: Custom validation rules per content type
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly (see TESTING_GUIDE.md)
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- React team for React 19
+- Tailwind CSS for the styling framework
+- @dnd-kit for drag and drop functionality
+- React Quill for rich text editing
+- Lucide for the icon set
+
+---
+
+**Version**: 2.0.0  
+**Last Updated**: November 28, 2025  
+**Status**: ✅ Production Ready

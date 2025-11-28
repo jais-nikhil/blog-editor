@@ -64,7 +64,7 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
   };
 
   return (
-    <div className="relative" style={{ marginBottom: '20px' }}>
+    <div className="relative" style={{ marginBottom: '40px' }}>
       {/* Plus button above */}
       <div className="relative mb-3">
         <div className="group relative">
@@ -99,7 +99,7 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
       </div>
 
       {/* Subcard content */}
-      <div className="mb-3">
+      <div className="mb-3" data-subcard-id={subcard.id}>
         {renderSubCard()}
       </div>
 

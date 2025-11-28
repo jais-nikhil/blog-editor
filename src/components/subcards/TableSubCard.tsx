@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Plus, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, Plus, X, ChevronUp, ChevronDown, Table as TableIcon } from 'lucide-react';
 import type { TableData } from '../../types';
 
 interface TableSubCardProps {
@@ -92,7 +92,10 @@ const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, o
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-emerald-800 mb-3">Table</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <TableIcon className="h-4 w-4 text-emerald-600" />
+        <h4 className="text-sm font-bold text-emerald-800">Table</h4>
+      </div>
       
       <div className="space-y-3">
         <div className="overflow-x-auto">
