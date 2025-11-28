@@ -1,0 +1,47 @@
+# Source files
+src/
+demo/
+public/
+
+# Config files
+vite.config.ts
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
+tsconfig.lib.json
+tailwind.config.js
+postcss.config.js
+eslint.config.js
+
+# Development files
+.git/
+.gitignore
+node_modules/
+*.log
+.DS_Store
+
+# Documentation (keep README.md)
+CHANGELOG.md
+TESTING_GUIDE.md
+QUICK_REFERENCE.md
+SUMMARY.md
+NEW_FEATURES.md
+
+# Build artifacts
+.vite/
+.turbo/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Only include dist folder
+!dist/

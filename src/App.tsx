@@ -1,17 +1,8 @@
 import './App.css'
-import { BlogEditor } from './components'
+import DemoApp from '../demo/src/DemoApp'
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Blog Editor
-        </h1>
-        <BlogEditor />
-      </div>
-    </div>
-  )
+  return <DemoApp />
 }
 
 export default App
