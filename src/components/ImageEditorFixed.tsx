@@ -78,15 +78,38 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
     
     const img = imageRef.current;
     const container = cropContainerRef.current;
-    const containerRect = container.getBoundingClientRect();
-    const imgRect = img.getBoundingClientRect();
     
-    // Calculate image position relative to container
+    // Get natural and displayed dimensions
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
+    
+    // Calculate how the image fits with object-contain
+    const containerAspect = containerWidth / containerHeight;
+    const imageAspect = naturalWidth / naturalHeight;
+    
+    let displayWidth, displayHeight, offsetX, offsetY;
+    
+    if (imageAspect > containerAspect) {
+      // Image is wider than container - fit to width
+      displayWidth = containerWidth;
+      displayHeight = containerWidth / imageAspect;
+      offsetX = 0;
+      offsetY = (containerHeight - displayHeight) / 2;
+    } else {
+      // Image is taller than container - fit to height
+      displayWidth = containerHeight * imageAspect;
+      displayHeight = containerHeight;
+      offsetX = (containerWidth - displayWidth) / 2;
+      offsetY = 0;
+    }
+    
     const bounds = {
-      x: imgRect.left - containerRect.left,
-      y: imgRect.top - containerRect.top,
-      width: imgRect.width,
-      height: imgRect.height
+      x: offsetX,
+      y: offsetY,
+      width: displayWidth,
+      height: displayHeight
     };
     
     setImageBounds(bounds);
@@ -324,27 +347,19 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
     
     if (!ctx) return;
     
-    // Calculate the actual displayed image dimensions and position
-    const imgRect = img.getBoundingClientRect();
-    const containerRect = cropContainerRef.current?.getBoundingClientRect();
+    // Calculate scale factors from displayed image to natural image
+    const scaleX = img.naturalWidth / imageBounds.width;
+    const scaleY = img.naturalHeight / imageBounds.height;
     
-    if (!containerRect) return;
-    
-    // Scale factors from displayed image to natural image
-    const scaleX = img.naturalWidth / imgRect.width;
-    const scaleY = img.naturalHeight / imgRect.height;
-    
-    // Calculate crop coordinates relative to the displayed image
-    const cropXRelative = cropArea.x * (imgRect.width / containerSize.width);
-    const cropYRelative = cropArea.y * (imgRect.height / containerSize.height);
-    const cropWidthRelative = cropArea.width * (imgRect.width / containerSize.width);
-    const cropHeightRelative = cropArea.height * (imgRect.height / containerSize.height);
+    // Calculate crop coordinates relative to the image bounds (not container)
+    const cropXRelative = cropArea.x - imageBounds.x;
+    const cropYRelative = cropArea.y - imageBounds.y;
     
     // Convert to natural image coordinates
     const naturalCropX = cropXRelative * scaleX;
     const naturalCropY = cropYRelative * scaleY;
-    const naturalCropWidth = cropWidthRelative * scaleX;
-    const naturalCropHeight = cropHeightRelative * scaleY;
+    const naturalCropWidth = cropArea.width * scaleX;
+    const naturalCropHeight = cropArea.height * scaleY;
     
     // Set canvas size
     canvas.width = naturalCropWidth;
@@ -654,8 +669,26 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
                     onLoad={calculateImageBounds}
                   />
                   
+                  {/* Image Bounds Indicator */}
+                  {imageBounds.width > 0 && (
+                    <div
+                      className="absolute border border-red-300 border-dashed pointer-events-none"
+                      style={{
+                        left: imageBounds.x,
+                        top: imageBounds.y,
+                        width: imageBounds.width,
+                        height: imageBounds.height,
+                      }}
+                    />
+                  )}
+                  
                   {/* Crop Overlay */}
                   <div className="absolute inset-0 bg-black bg-opacity-40" />
+                  
+                  {/* Crop Dimensions Display */}
+                  <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+                    {Math.round(cropArea.width)} × {Math.round(cropArea.height)}
+                  </div>
                   
                   {/* Crop Selection */}
                   <div
