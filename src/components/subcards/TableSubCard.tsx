@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, Plus, X, ChevronUp, ChevronDown, Table as TableIcon } from 'lucide-react';
 import type { TableData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface TableSubCardProps {
   data: Partial<TableData>;
@@ -8,11 +9,16 @@ interface TableSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const headers = data.headers || ['Header 1', 'Header 2'];
   const rows = data.rows || [['', '']];
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
+  };
 
   const updateHeaders = (newHeaders: string[]) => {
     const newRows = rows.map(row => {
@@ -108,7 +114,9 @@ const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, o
                       type="text"
                       value={header}
                       onChange={(e) => updateHeader(index, e.target.value)}
-                      className="w-full px-3 py-2 border-0 bg-transparent font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className={`w-full px-3 py-2 border-0 font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                        getFieldError(`headers[${index}]`) ? 'bg-red-50' : 'bg-transparent'
+                      }`}
                       placeholder={`Header ${index + 1}`}
                     />
                     {headers.length > 1 && (
@@ -119,6 +127,7 @@ const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, o
                         <X className="h-3 w-3" />
                       </button>
                     )}
+                    <InlineFieldError message={getFieldError(`headers[${index}]`)} />
                   </th>
                 ))}
                 <th className="w-10">
@@ -140,9 +149,12 @@ const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, o
                         type="text"
                         value={cell}
                         onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                        className="w-full px-3 py-2 border-0 bg-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className={`w-full px-3 py-2 border-0 bg-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                          getFieldError(`rows[${rowIndex}][${colIndex}]`) ? 'bg-red-50' : ''
+                        }`}
                         placeholder="Enter data..."
                       />
+                      <InlineFieldError message={getFieldError(`rows[${rowIndex}][${colIndex}]`)} />
                     </td>
                   ))}
                   <td className="w-10 text-center">

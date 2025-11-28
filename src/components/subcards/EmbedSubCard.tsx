@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, ChevronUp, ChevronDown, Code, Youtube, Video, Twitter, Instagram, Linkedin, AlertCircle } from 'lucide-react';
 import type { EmbedData } from '../../types';
+import { InlineFieldError } from '../index';
 
 // Extend Window interface for social media embed scripts
 declare global {
@@ -24,6 +25,7 @@ interface EmbedSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
 interface ParsedEmbed {
@@ -34,7 +36,7 @@ interface ParsedEmbed {
   needsScript?: boolean;
 }
 
-const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const [parsedEmbed, setParsedEmbed] = useState<ParsedEmbed | null>(null);
   const [error, setError] = useState<string>('');
   const previewRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,10 @@ const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete, o
 
   const handleChange = (field: keyof EmbedData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   // Load external scripts for social embeds
@@ -328,9 +334,12 @@ const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete, o
             value={data.embedCode || ''}
             onChange={(e) => handleChange('embedCode', e.target.value)}
             placeholder="Paste YouTube, Vimeo, X, Instagram, or LinkedIn URL or embed code here..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono text-sm resize-none"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono text-sm resize-none ${
+              getFieldError('embedCode') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
             rows={3}
           />
+          <InlineFieldError message={getFieldError('embedCode')} />
           <p className="text-xs text-gray-500 mt-1">
             Supports: YouTube, Vimeo, X (Twitter), Instagram, LinkedIn URLs or embed codes
           </p>

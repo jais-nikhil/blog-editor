@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, Quote } from 'lucide-react';
 import type { BlockquoteData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface BlockquoteSubCardProps {
   data: Partial<BlockquoteData>;
@@ -8,11 +9,16 @@ interface BlockquoteSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const BlockquoteSubCard: React.FC<BlockquoteSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const BlockquoteSubCard: React.FC<BlockquoteSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof BlockquoteData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -58,8 +64,11 @@ const BlockquoteSubCard: React.FC<BlockquoteSubCardProps> = ({ data, onUpdate, o
             value={data.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
             placeholder="Enter the quote text..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+              getFieldError('title') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
           />
+          <InlineFieldError message={getFieldError('title')} />
         </div>
         
         <div className="flex-1">

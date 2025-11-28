@@ -242,6 +242,7 @@ const BlogEditor: React.FC = () => {
               onDeleteSubCard={deleteSubCard}
               onMoveSubCard={moveSubCard}
               onInsertSubCard={insertSubCard}
+              validationErrors={validationErrors}
             />
           ))}
         </SortableContext>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, MessageSquare } from 'lucide-react';
 import type { QAData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface QASubCardProps {
   data: Partial<QAData>;
@@ -8,11 +9,16 @@ interface QASubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const QASubCard: React.FC<QASubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const QASubCard: React.FC<QASubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof QAData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -55,9 +61,12 @@ const QASubCard: React.FC<QASubCardProps> = ({ data, onUpdate, onDelete, onMoveU
             value={data.question || ''}
             onChange={(e) => handleChange('question', e.target.value)}
             placeholder="Enter the question..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none ${
+              getFieldError('question') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
             rows={2}
           />
+          <InlineFieldError message={getFieldError('question')} />
         </div>
         
         <div>
@@ -68,9 +77,12 @@ const QASubCard: React.FC<QASubCardProps> = ({ data, onUpdate, onDelete, onMoveU
             value={data.answer || ''}
             onChange={(e) => handleChange('answer', e.target.value)}
             placeholder="Enter the answer..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none ${
+              getFieldError('answer') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
             rows={3}
           />
+          <InlineFieldError message={getFieldError('answer')} />
         </div>
       </div>
     </div>

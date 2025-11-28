@@ -11,6 +11,7 @@ interface AlsoReadSubCardProps {
   onMoveDown: () => void;
   storiesData?: StoryOption[];
   onFetchStories?: (query: string) => Promise<StoryOption[]>;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
 interface FormValues {

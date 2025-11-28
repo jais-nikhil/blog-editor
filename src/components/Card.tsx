@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import type { Card as CardType, SubCard } from '../types';
+import type { ValidationError } from '../utils/validation';
 import RichTextEditor from './RichTextEditor';
 import { ContentTypeMenu, SubCardRenderer } from './';
 
@@ -15,6 +16,7 @@ interface CardProps {
   onDeleteSubCard: (cardId: string, subcardId: string) => void;
   onMoveSubCard: (cardId: string, subcardId: string, direction: 'up' | 'down') => void;
   onInsertSubCard: (cardId: string, subcardId: string, newSubcard: SubCard, position: 'above' | 'below') => void;
+  validationErrors?: ValidationError[];
 }
 
 const Card: React.FC<CardProps> = ({
@@ -26,6 +28,7 @@ const Card: React.FC<CardProps> = ({
   onDeleteSubCard,
   onMoveSubCard,
   onInsertSubCard,
+  validationErrors = [],
 }) => {
   const [showTopMenu, setShowTopMenu] = useState(false);
   const [showBottomMenu, setShowBottomMenu] = useState(false);
@@ -141,6 +144,9 @@ const Card: React.FC<CardProps> = ({
               };
               onInsertSubCard(card.id, subcard.id, newSubCard, 'below');
             }}
+            validationErrors={validationErrors
+              .filter(err => err.subcardId === subcard.id)
+              .map(err => ({ field: err.field, message: err.message }))}
           />
         </div>
       ))}
@@ -181,6 +187,9 @@ const Card: React.FC<CardProps> = ({
               };
               onInsertSubCard(card.id, subcard.id, newSubCard, 'below');
             }}
+            validationErrors={validationErrors
+              .filter(err => err.subcardId === subcard.id)
+              .map(err => ({ field: err.field, message: err.message }))}
           />
         </div>
       ))}

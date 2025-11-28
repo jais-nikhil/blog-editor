@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Trash2, ChevronUp, ChevronDown, Upload, Edit, Download, Image } from 'lucide-react';
 import ImageEditor from '../ImageEditorFixed';
 import type { ImageData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface ImageSubCardProps {
   data: Partial<ImageData>;
@@ -9,14 +10,19 @@ interface ImageSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const ImageSubCard: React.FC<ImageSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const ImageSubCard: React.FC<ImageSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleChange = (field: keyof ImageData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   const handleFileUpload = useCallback((files: FileList | null) => {
@@ -184,8 +190,11 @@ const ImageSubCard: React.FC<ImageSubCardProps> = ({ data, onUpdate, onDelete, o
                   value={data.alt || ''}
                   onChange={(e) => handleChange('alt', e.target.value)}
                   placeholder="Alternative text..."
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-pink-500"
+                  className={`w-full px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-pink-500 ${
+                    getFieldError('alt') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
                 />
+                <InlineFieldError message={getFieldError('alt')} />
               </div>
 
               <div>

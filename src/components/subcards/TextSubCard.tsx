@@ -12,9 +12,10 @@ interface TextSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const TextSubCard: React.FC<TextSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const TextSubCard: React.FC<TextSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleContentChange = (content: string) => {
     onUpdate({ ...data, content });
   };

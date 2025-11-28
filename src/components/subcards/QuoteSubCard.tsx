@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, Quote as QuoteIcon } from 'lucide-react';
 import type { QuoteData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface QuoteSubCardProps {
   data: Partial<QuoteData>;
@@ -8,11 +9,16 @@ interface QuoteSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const QuoteSubCard: React.FC<QuoteSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const QuoteSubCard: React.FC<QuoteSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof QuoteData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -55,9 +61,12 @@ const QuoteSubCard: React.FC<QuoteSubCardProps> = ({ data, onUpdate, onDelete, o
             value={data.quote || ''}
             onChange={(e) => handleChange('quote', e.target.value)}
             placeholder="Enter the quote..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent resize-none"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent resize-none ${
+              getFieldError('quote') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
             rows={3}
           />
+          <InlineFieldError message={getFieldError('quote')} />
         </div>
         
         <div>
@@ -69,8 +78,11 @@ const QuoteSubCard: React.FC<QuoteSubCardProps> = ({ data, onUpdate, onDelete, o
             value={data.author || ''}
             onChange={(e) => handleChange('author', e.target.value)}
             placeholder="Author name..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent ${
+              getFieldError('author') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
           />
+          <InlineFieldError message={getFieldError('author')} />
         </div>
         
         <div>

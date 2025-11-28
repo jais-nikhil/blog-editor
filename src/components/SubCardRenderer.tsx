@@ -24,40 +24,41 @@ interface SubCardRendererProps {
   onMoveDown: () => void;
   onInsertAbove: (type: string) => void;
   onInsertBelow: (type: string) => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, onDelete, onMoveUp, onMoveDown, onInsertAbove, onInsertBelow }) => {
+const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, onDelete, onMoveUp, onMoveDown, onInsertAbove, onInsertBelow, validationErrors = [] }) => {
   const [showAboveMenu, setShowAboveMenu] = useState(false);
   const [showBelowMenu, setShowBelowMenu] = useState(false);
 
   const renderSubCard = () => {
     switch (subcard.type) {
       case 'text':
-        return <TextSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <TextSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'blockquote':
-        return <BlockquoteSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <BlockquoteSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'cta':
-        return <CTASubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <CTASubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'bigfact':
-        return <BigFactSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <BigFactSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'blurp':
-        return <BlurpSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <BlurpSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'question':
-        return <QuestionSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <QuestionSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'qa':
-        return <QASubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <QASubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'summary':
-        return <SummarySubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <SummarySubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'image':
-        return <ImageSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <ImageSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'alsoread':
-        return <AlsoReadSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <AlsoReadSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'quote':
-        return <QuoteSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <QuoteSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'embed':
-        return <EmbedSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <EmbedSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       case 'table':
-        return <TableSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} />;
+        return <TableSubCard data={subcard.data} onUpdate={onUpdate} onDelete={onDelete} onMoveUp={onMoveUp} onMoveDown={onMoveDown} validationErrors={validationErrors} />;
       default:
         return <div className="p-4 bg-red-100 text-red-700 rounded">Unknown content type: {subcard.type}</div>;
     }

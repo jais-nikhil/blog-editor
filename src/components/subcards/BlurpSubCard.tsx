@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, MessageCircle } from 'lucide-react';
 import type { BlurpData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface BlurpSubCardProps {
   data: Partial<BlurpData>;
@@ -8,11 +9,16 @@ interface BlurpSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const BlurpSubCard: React.FC<BlurpSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const BlurpSubCard: React.FC<BlurpSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof BlurpData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -56,8 +62,11 @@ const BlurpSubCard: React.FC<BlurpSubCardProps> = ({ data, onUpdate, onDelete, o
           value={data.content || ''}
           onChange={(e) => handleChange('content', e.target.value)}
           placeholder="Enter blurp content..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+            getFieldError('content') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+          }`}
         />
+        <InlineFieldError message={getFieldError('content')} />
       </div>
     </div>
   );

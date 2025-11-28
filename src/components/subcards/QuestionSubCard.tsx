@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, HelpCircle } from 'lucide-react';
 import type { QuestionData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface QuestionSubCardProps {
   data: Partial<QuestionData>;
@@ -8,11 +9,16 @@ interface QuestionSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const QuestionSubCard: React.FC<QuestionSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const QuestionSubCard: React.FC<QuestionSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof QuestionData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -56,8 +62,11 @@ const QuestionSubCard: React.FC<QuestionSubCardProps> = ({ data, onUpdate, onDel
           value={data.question || ''}
           onChange={(e) => handleChange('question', e.target.value)}
           placeholder="Enter your question..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
+            getFieldError('question') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+          }`}
         />
+        <InlineFieldError message={getFieldError('question')} />
       </div>
     </div>
   );

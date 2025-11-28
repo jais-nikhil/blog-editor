@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, MousePointer, Check, ExternalLink, Shield } from 'lucide-react';
 import type { CTAData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface CTASubCardProps {
   data: Partial<CTAData>;
@@ -8,11 +9,16 @@ interface CTASubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof CTAData, value: string | boolean) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -59,8 +65,11 @@ const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMov
               value={data.title || ''}
               onChange={(e) => handleChange('title', e.target.value)}
               placeholder="Enter CTA title..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                getFieldError('title') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+              }`}
             />
+            <InlineFieldError message={getFieldError('title')} />
           </div>
           
           <div className="flex-1">
@@ -72,8 +81,11 @@ const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMov
               value={data.actionUrl || ''}
               onChange={(e) => handleChange('actionUrl', e.target.value)}
               placeholder="https://example.com"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                getFieldError('actionUrl') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+              }`}
             />
+            <InlineFieldError message={getFieldError('actionUrl')} />
           </div>
         </div>
         

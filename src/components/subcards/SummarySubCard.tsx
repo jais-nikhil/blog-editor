@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, Plus, X, ChevronUp, ChevronDown, List } from 'lucide-react';
 import type { SummaryData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface SummarySubCardProps {
   data: Partial<SummaryData>;
@@ -8,10 +9,15 @@ interface SummarySubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const points = data.points || [''];
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
+  };
 
   const handleTitleChange = (value: string) => {
     onUpdate({ ...data, title: value });
@@ -75,8 +81,11 @@ const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelet
             value={data.title || ''}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Enter summary title..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
+              getFieldError('title') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
           />
+          <InlineFieldError message={getFieldError('title')} />
         </div>
         
         <div>
@@ -85,22 +94,27 @@ const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelet
           </label>
           <div className="space-y-2">
             {points.map((point, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={point}
-                  onChange={(e) => handlePointChange(index, e.target.value)}
-                  placeholder={`Point ${index + 1}...`}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                />
-                {points.length > 1 && (
-                  <button
-                    onClick={() => removePoint(index)}
-                    className="text-red-400 hover:text-red-600 transition-colors"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+              <div key={index}>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={point}
+                    onChange={(e) => handlePointChange(index, e.target.value)}
+                    placeholder={`Point ${index + 1}...`}
+                    className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
+                      getFieldError(`points[${index}]`) ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
+                  />
+                  {points.length > 1 && (
+                    <button
+                      onClick={() => removePoint(index)}
+                      className="text-red-400 hover:text-red-600 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+                <InlineFieldError message={getFieldError(`points[${index}]`)} />
               </div>
             ))}
             <button

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, ChevronUp, ChevronDown, TrendingUp } from 'lucide-react';
 import type { BigFactData } from '../../types';
+import { InlineFieldError } from '../index';
 
 interface BigFactSubCardProps {
   data: Partial<BigFactData>;
@@ -8,11 +9,16 @@ interface BigFactSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const BigFactSubCard: React.FC<BigFactSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
+const BigFactSubCard: React.FC<BigFactSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
   const handleChange = (field: keyof BigFactData, value: string) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  const getFieldError = (fieldName: string) => {
+    return validationErrors.find(e => e.field === fieldName)?.message;
   };
 
   return (
@@ -58,8 +64,11 @@ const BigFactSubCard: React.FC<BigFactSubCardProps> = ({ data, onUpdate, onDelet
             value={data.fact || ''}
             onChange={(e) => handleChange('fact', e.target.value)}
             placeholder="Enter the main fact..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent ${
+              getFieldError('fact') ? 'border-red-500 bg-red-50' : 'border-gray-300'
+            }`}
           />
+          <InlineFieldError message={getFieldError('fact')} />
         </div>
         
         <div className="flex-1">
