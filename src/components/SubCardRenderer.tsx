@@ -64,19 +64,28 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
   };
 
   return (
-    <div className="relative">
+    <div className="relative mb-6">
       {/* Plus button above */}
-      <div className="relative mb-2">
-        <button
-          onClick={() => setShowAboveMenu(!showAboveMenu)}
-          className="absolute -left-8 top-0 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
-          title="Add content above"
-        >
-          <Plus className="h-3 w-3" />
-        </button>
+      <div className="relative mb-3">
+        <div className="group relative">
+          <button
+            onClick={() => setShowAboveMenu(!showAboveMenu)}
+            className="absolute -left-8 -top-2 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          >
+            <Plus className="h-3 w-3" />
+          </button>
+          
+          {/* Custom tooltip */}
+          <div className="absolute left-2 -top-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30 delay-500">
+            <div className="bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap shadow-lg">
+              Insert content above
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+        </div>
         
         {showAboveMenu && (
-          <div className="absolute left-8 top-0 z-20">
+          <div className="absolute left-8 -top-2 z-30">
             <ContentTypeMenu
               onSelect={(type: string) => {
                 onInsertAbove(type);
@@ -89,20 +98,31 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
       </div>
 
       {/* Subcard content */}
-      {renderSubCard()}
+      <div className="mb-3">
+        {renderSubCard()}
+      </div>
 
       {/* Plus button below */}
-      <div className="relative mt-2">
-        <button
-          onClick={() => setShowBelowMenu(!showBelowMenu)}
-          className="absolute -left-8 top-0 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
-          title="Add content below"
-        >
-          <Plus className="h-3 w-3" />
-        </button>
+      <div className="relative">
+        <div className="group relative">
+          <button
+            onClick={() => setShowBelowMenu(!showBelowMenu)}
+            className="absolute -left-8 top-2 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          >
+            <Plus className="h-3 w-3" />
+          </button>
+          
+          {/* Custom tooltip */}
+          <div className="absolute left-2 -top-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30 delay-500">
+            <div className="bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap shadow-lg">
+              Insert content below
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+        </div>
         
         {showBelowMenu && (
-          <div className="absolute left-8 top-0 z-20">
+          <div className="absolute left-8 top-2 z-30">
             <ContentTypeMenu
               onSelect={(type: string) => {
                 onInsertBelow(type);

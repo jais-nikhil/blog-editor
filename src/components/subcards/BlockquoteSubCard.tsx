@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, Quote } from 'lucide-react';
 import type { BlockquoteData } from '../../types';
 
 interface BlockquoteSubCardProps {
@@ -42,7 +42,10 @@ const BlockquoteSubCard: React.FC<BlockquoteSubCardProps> = ({ data, onUpdate, o
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-blue-800 mb-3">Blockquote</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <Quote className="h-4 w-4 text-blue-600" />
+        <h4 className="text-sm font-bold text-blue-800">Blockquote</h4>
+      </div>
       
       {/* Inline layout */}
       <div className="flex space-x-3">

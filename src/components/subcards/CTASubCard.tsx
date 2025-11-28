@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, MousePointer } from 'lucide-react';
 import type { CTAData } from '../../types';
 
 interface CTASubCardProps {
@@ -42,7 +42,10 @@ const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMov
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-green-800 mb-3">Call to Action</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <MousePointer className="h-4 w-4 text-green-600" />
+        <h4 className="text-sm font-bold text-green-800">Call to Action</h4>
+      </div>
       
       {/* Inline layout with checkboxes below */}
       <div className="space-y-3">

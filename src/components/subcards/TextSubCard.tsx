@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, Type } from 'lucide-react';
 import RichTextEditor from '../RichTextEditor';
 
 interface TextData {
@@ -45,7 +45,10 @@ const TextSubCard: React.FC<TextSubCardProps> = ({ data, onUpdate, onDelete, onM
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-blue-800 mb-3">Rich Text</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <Type className="h-4 w-4 text-blue-600" />
+        <h4 className="text-sm font-bold text-blue-800">Rich Text</h4>
+      </div>
       
       <RichTextEditor
         content={data.content || ''}

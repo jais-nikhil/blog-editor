@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Trash2, ChevronUp, ChevronDown, Upload, Edit, Download } from 'lucide-react';
-import ImageEditor from '../ImageEditor';
+import { Trash2, ChevronUp, ChevronDown, Upload, Edit, Download, Image } from 'lucide-react';
+import ImageEditor from '../ImageEditorFixed';
 import type { ImageData } from '../../types';
 
 interface ImageSubCardProps {
@@ -92,7 +92,10 @@ const ImageSubCard: React.FC<ImageSubCardProps> = ({ data, onUpdate, onDelete, o
           </button>
         </div>
         
-        <h4 className="text-sm font-medium text-pink-800 mb-3">Image</h4>
+        <div className="flex items-center gap-2 mb-3">
+          <Image className="h-4 w-4 text-pink-600" />
+          <h4 className="text-sm font-bold text-pink-800">Image</h4>
+        </div>
 
         {!data.url ? (
           /* Drop Zone */
