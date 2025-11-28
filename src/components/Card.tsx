@@ -98,10 +98,10 @@ const Card: React.FC<CardProps> = ({
       <div className="relative mb-4">
         <button
           onClick={() => setShowTopMenu(!showTopMenu)}
-          className="absolute -left-8 -top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          className="absolute -left-8 -top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110 transform hover:shadow-lg animate-pulse-gentle hover:animate-none z-10"
           title="Add content above"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-3 w-3 transition-transform duration-300 hover:rotate-90" />
         </button>
         
         {showTopMenu && (
@@ -189,10 +189,10 @@ const Card: React.FC<CardProps> = ({
       <div className="relative">
         <button
           onClick={() => setShowBottomMenu(!showBottomMenu)}
-          className="absolute -left-8 top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          className="absolute -left-8 top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:scale-110 transform hover:shadow-lg animate-pulse-gentle hover:animate-none z-10"
           title="Add content below"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-3 w-3 transition-transform duration-300 hover:rotate-90" />
         </button>
         
         {showBottomMenu && (

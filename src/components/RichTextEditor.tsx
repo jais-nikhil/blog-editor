@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -44,6 +44,32 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
   const [showHeadingDropdown, setShowHeadingDropdown] = useState(false);
   const [showFontDropdown, setShowFontDropdown] = useState(false);
   
+  const headingDropdownRef = useRef<HTMLDivElement>(null);
+  const fontDropdownRef = useRef<HTMLDivElement>(null);
+  const colorPickerRef = useRef<HTMLDivElement>(null);
+  const highlightPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (headingDropdownRef.current && !headingDropdownRef.current.contains(event.target as Node)) {
+        setShowHeadingDropdown(false);
+      }
+      if (fontDropdownRef.current && !fontDropdownRef.current.contains(event.target as Node)) {
+        setShowFontDropdown(false);
+      }
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false);
+      }
+      if (highlightPickerRef.current && !highlightPickerRef.current.contains(event.target as Node)) {
+        setShowHighlightPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -72,7 +98,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none min-h-[120px] p-4 text-left max-w-none',
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none min-h-[240px] p-4 text-left max-w-none',
         ...(placeholder && { 'data-placeholder': placeholder }),
       },
     },
@@ -110,16 +136,34 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
     { level: 3, label: 'Heading 3', icon: Heading3 }
   ];
 
-  const fontFamilies = [
-    { name: 'Default', value: '' },
-    { name: 'Arial', value: 'Arial, sans-serif' },
-    { name: 'Times New Roman', value: 'Times New Roman, serif' },
-    { name: 'Georgia', value: 'Georgia, serif' },
-    { name: 'Helvetica', value: 'Helvetica, sans-serif' },
-    { name: 'Verdana', value: 'Verdana, sans-serif' },
-    { name: 'Monaco', value: 'Monaco, monospace' },
-    { name: 'Inter', value: 'Inter, sans-serif' },
+  const [customFonts, setCustomFonts] = useState<Array<{name: string, value: string, category: string}>>([]);
+  const [showAddFont, setShowAddFont] = useState(false);
+  const [newFontName, setNewFontName] = useState('');
+  const [newFontValue, setNewFontValue] = useState('');
+
+  const defaultFontFamilies = [
+    { name: 'Default', value: '', category: 'System' },
+    { name: 'Arial', value: 'Arial, sans-serif', category: 'System' },
+    { name: 'Times New Roman', value: 'Times New Roman, serif', category: 'System' },
+    { name: 'Georgia', value: 'Georgia, serif', category: 'System' },
+    { name: 'Helvetica', value: 'Helvetica, sans-serif', category: 'System' },
+    { name: 'Verdana', value: 'Verdana, sans-serif', category: 'System' },
+    { name: 'Monaco', value: 'Monaco, monospace', category: 'System' },
+    { name: 'Inter', value: 'Inter, sans-serif', category: 'Google' },
+    { name: 'Open Sans', value: 'Open Sans, sans-serif', category: 'Google' },
+    { name: 'Roboto', value: 'Roboto, sans-serif', category: 'Google' },
+    { name: 'Lato', value: 'Lato, sans-serif', category: 'Google' },
+    { name: 'Montserrat', value: 'Montserrat, sans-serif', category: 'Google' },
+    { name: 'Poppins', value: 'Poppins, sans-serif', category: 'Google' },
+    { name: 'Playfair Display', value: 'Playfair Display, serif', category: 'Google' },
+    { name: 'Source Sans Pro', value: 'Source Sans 3, sans-serif', category: 'Google' },
+    { name: 'Nunito', value: 'Nunito, sans-serif', category: 'Google' },
+    { name: 'PT Sans', value: 'PT Sans, sans-serif', category: 'Google' },
+    { name: 'Merriweather', value: 'Merriweather, serif', category: 'Google' },
+    { name: 'Oswald', value: 'Oswald, sans-serif', category: 'Google' },
   ];
+
+  const fontFamilies = [...defaultFontFamilies, ...customFonts];
 
   const getCurrentHeadingLevel = () => {
     for (let i = 1; i <= 6; i++) {
@@ -154,13 +198,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
     setShowFontDropdown(false);
   };
 
+  const addCustomFont = () => {
+    if (newFontName.trim() && newFontValue.trim()) {
+      const newFont = {
+        name: newFontName.trim(),
+        value: newFontValue.trim(),
+        category: 'Custom'
+      };
+      setCustomFonts(prev => [...prev, newFont]);
+      setNewFontName('');
+      setNewFontValue('');
+      setShowAddFont(false);
+    }
+  };
+
+  const removeCustomFont = (index: number) => {
+    setCustomFonts(prev => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
       {/* Compact Single Row Toolbar */}
       <div className="border-b border-gray-200 p-2 bg-gray-50">
         <div className="flex items-center gap-1 flex-wrap">
           {/* Heading Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={headingDropdownRef}>
             <button
               onClick={() => {
                 setShowHeadingDropdown(!showHeadingDropdown);
@@ -196,7 +258,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
           </div>
 
           {/* Font Family Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={fontDropdownRef}>
             <button
               onClick={() => {
                 setShowFontDropdown(!showFontDropdown);
@@ -213,8 +275,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
               <ChevronDown className="h-3 w-3" />
             </button>
             {showFontDropdown && (
-              <div className="absolute top-8 left-0 bg-white border rounded-lg shadow-lg py-1 z-50 min-w-[160px]">
-                {fontFamilies.map((font) => (
+              <div className="absolute top-8 left-0 bg-white border rounded-lg shadow-lg py-1 z-50 min-w-[200px] max-h-80 overflow-y-auto">
+                {/* System Fonts */}
+                <div className="px-3 py-1 text-xs font-semibold text-gray-500 border-b">System Fonts</div>
+                {fontFamilies.filter(f => f.category === 'System').map((font) => (
                   <button
                     key={font.value}
                     onClick={() => setFontFamily(font.value)}
@@ -224,6 +288,91 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                     {font.name}
                   </button>
                 ))}
+                
+                {/* Google Fonts */}
+                <div className="px-3 py-1 text-xs font-semibold text-gray-500 border-b border-t">Google Fonts</div>
+                {fontFamilies.filter(f => f.category === 'Google').map((font) => (
+                  <button
+                    key={font.value}
+                    onClick={() => setFontFamily(font.value)}
+                    className="w-full px-3 py-2 text-left hover:bg-gray-100 text-sm"
+                    style={{ fontFamily: font.value }}
+                  >
+                    {font.name}
+                  </button>
+                ))}
+
+                {/* Custom Fonts */}
+                {customFonts.length > 0 && (
+                  <>
+                    <div className="px-3 py-1 text-xs font-semibold text-gray-500 border-b border-t">Custom Fonts</div>
+                    {customFonts.map((font, index) => (
+                      <div key={font.value} className="flex items-center hover:bg-gray-100">
+                        <button
+                          onClick={() => setFontFamily(font.value)}
+                          className="flex-1 px-3 py-2 text-left text-sm"
+                          style={{ fontFamily: font.value }}
+                        >
+                          {font.name}
+                        </button>
+                        <button
+                          onClick={() => removeCustomFont(index)}
+                          className="px-2 text-red-500 hover:text-red-700"
+                          title="Remove font"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {/* Add Custom Font */}
+                <div className="border-t">
+                  {!showAddFont ? (
+                    <button
+                      onClick={() => setShowAddFont(true)}
+                      className="w-full px-3 py-2 text-left text-sm text-blue-600 hover:bg-blue-50"
+                    >
+                      + Add Custom Font
+                    </button>
+                  ) : (
+                    <div className="p-3 space-y-2">
+                      <input
+                        type="text"
+                        placeholder="Font name"
+                        value={newFontName}
+                        onChange={(e) => setNewFontName(e.target.value)}
+                        className="w-full px-2 py-1 text-xs border rounded"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Font family (e.g., 'Roboto, sans-serif')"
+                        value={newFontValue}
+                        onChange={(e) => setNewFontValue(e.target.value)}
+                        className="w-full px-2 py-1 text-xs border rounded"
+                      />
+                      <div className="flex gap-1">
+                        <button
+                          onClick={addCustomFont}
+                          className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                          Add
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowAddFont(false);
+                            setNewFontName('');
+                            setNewFontValue('');
+                          }}
+                          className="px-2 py-1 text-xs bg-gray-300 rounded hover:bg-gray-400"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -328,7 +477,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
           <div className="w-px h-6 bg-gray-300" />
 
           {/* Color Tools */}
-          <div className="relative">
+          <div className="relative" ref={colorPickerRef}>
             <button
               onClick={() => {
                 setShowColorPicker(!showColorPicker);
@@ -361,7 +510,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
             )}
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={highlightPickerRef}>
             <button
               onClick={() => {
                 setShowHighlightPicker(!showHighlightPicker);

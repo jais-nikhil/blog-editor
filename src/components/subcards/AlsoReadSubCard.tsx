@@ -1,6 +1,6 @@
-import React from 'react';
-import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
-import type { AlsoReadData } from '../../types';
+import React, { useState, useRef, useEffect } from 'react';
+import { Trash2, ChevronUp, ChevronDown, Search, BookOpen, ExternalLink, Check } from 'lucide-react';
+import type { AlsoReadData, StoryOption } from '../../types';
 
 interface AlsoReadSubCardProps {
   data: Partial<AlsoReadData>;
@@ -8,27 +8,138 @@ interface AlsoReadSubCardProps {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  storiesData?: StoryOption[];
+  onFetchStories?: (query: string) => Promise<StoryOption[]>;
 }
 
-const AlsoReadSubCard: React.FC<AlsoReadSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
-  const handleChange = (field: keyof AlsoReadData, value: string) => {
+const AlsoReadSubCard: React.FC<AlsoReadSubCardProps> = ({ 
+  data, 
+  onUpdate, 
+  onDelete, 
+  onMoveUp, 
+  onMoveDown, 
+  storiesData = [],
+  onFetchStories 
+}) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredStories, setFilteredStories] = useState<StoryOption[]>(storiesData);
+  const [isLoading, setIsLoading] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const handleChange = (field: keyof AlsoReadData, value: any) => {
     onUpdate({ ...data, [field]: value });
+  };
+
+  // Mock stories data for demonstration
+  const defaultStories: StoryOption[] = [
+    {
+      id: '1',
+      title: 'Getting Started with React Hooks',
+      url: 'https://example.com/react-hooks-guide',
+      description: 'A comprehensive guide to using React hooks effectively'
+    },
+    {
+      id: '2', 
+      title: 'Modern CSS Techniques in 2024',
+      url: 'https://example.com/modern-css-2024',
+      description: 'Learn the latest CSS features and best practices'
+    },
+    {
+      id: '3',
+      title: 'TypeScript Best Practices for Large Projects',
+      url: 'https://example.com/typescript-best-practices',
+      description: 'How to structure and maintain large TypeScript codebases'
+    },
+    {
+      id: '4',
+      title: 'Performance Optimization in Web Applications',
+      url: 'https://example.com/web-performance-optimization',
+      description: 'Techniques to improve your application performance'
+    },
+    {
+      id: '5',
+      title: 'Building Accessible User Interfaces',
+      url: 'https://example.com/accessible-ui-design',
+      description: 'Creating inclusive designs for all users'
+    }
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const fetchAndFilterStories = async () => {
+      if (searchQuery.trim()) {
+        setIsLoading(true);
+        try {
+          let stories: StoryOption[];
+          if (onFetchStories) {
+            stories = await onFetchStories(searchQuery);
+          } else {
+            // Filter from default stories
+            stories = defaultStories.filter(story =>
+              story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              story.description?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+          }
+          setFilteredStories(stories);
+        } catch (error) {
+          console.error('Error fetching stories:', error);
+          setFilteredStories([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setFilteredStories(storiesData.length > 0 ? storiesData : defaultStories);
+      }
+    };
+
+    const debounce = setTimeout(fetchAndFilterStories, 300);
+    return () => clearTimeout(debounce);
+  }, [searchQuery, storiesData, onFetchStories]);
+
+  const selectStory = (story: StoryOption) => {
+    handleChange('title', story.title);
+    handleChange('url', story.url);
+    if (story.description) {
+      handleChange('description', story.description);
+    }
+    setIsDropdownOpen(false);
+    setSearchQuery('');
+  };
+
+  const openDropdown = () => {
+    setIsDropdownOpen(true);
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 100);
   };
 
   return (
     <div className="bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg relative">
+      {/* Move and Delete buttons */}
       <div className="absolute top-2 right-2 flex gap-1">
         <button
           onClick={onMoveUp}
           className="text-gray-400 hover:text-gray-600 transition-colors"
-          title="Move up"
+          title="Move Up"
         >
           <ChevronUp className="h-4 w-4" />
         </button>
         <button
           onClick={onMoveDown}
           className="text-gray-400 hover:text-gray-600 transition-colors"
-          title="Move down"
+          title="Move Down"
         >
           <ChevronDown className="h-4 w-4" />
         </button>
@@ -41,9 +152,75 @@ const AlsoReadSubCard: React.FC<AlsoReadSubCardProps> = ({ data, onUpdate, onDel
         </button>
       </div>
       
-      <h4 className="text-sm font-medium text-cyan-800 mb-3">Also Read</h4>
+      <div className="flex items-center gap-2 mb-3">
+        <BookOpen className="h-4 w-4 text-cyan-600" />
+        <h4 className="text-sm font-bold text-cyan-800">Also Read</h4>
+      </div>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Story Selector Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Select Story
+          </label>
+          <button
+            onClick={openDropdown}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-left bg-white hover:bg-gray-50 transition-colors flex items-center justify-between"
+          >
+            <span className="text-gray-600">
+              {data.title || 'Search and select a story...'}
+            </span>
+            <Search className="h-4 w-4 text-gray-400" />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden">
+              {/* Search Input */}
+              <div className="p-3 border-b border-gray-200">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search stories..."
+                    className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+              </div>
+
+              {/* Stories List */}
+              <div className="max-h-48 overflow-y-auto">
+                {isLoading ? (
+                  <div className="p-4 text-center text-gray-500">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500 mx-auto"></div>
+                    <span className="mt-2 block">Loading stories...</span>
+                  </div>
+                ) : filteredStories.length > 0 ? (
+                  filteredStories.map((story) => (
+                    <button
+                      key={story.id}
+                      onClick={() => selectStory(story)}
+                      className="w-full p-3 text-left hover:bg-cyan-50 transition-colors border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="font-medium text-gray-900 text-sm">{story.title}</div>
+                      {story.description && (
+                        <div className="text-xs text-gray-600 mt-1 line-clamp-2">{story.description}</div>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-gray-500">
+                    No stories found
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Manual Fields */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Title
@@ -81,6 +258,35 @@ const AlsoReadSubCard: React.FC<AlsoReadSubCardProps> = ({ data, onUpdate, onDel
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent resize-none"
             rows={2}
           />
+        </div>
+
+        {/* Styled Checkbox */}
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <input
+              type="checkbox"
+              id="openInNewTab"
+              checked={data.openInNewTab || false}
+              onChange={(e) => handleChange('openInNewTab', e.target.checked)}
+              className="sr-only"
+            />
+            <label
+              htmlFor="openInNewTab"
+              className={`relative flex items-center justify-center w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 ${
+                data.openInNewTab
+                  ? 'bg-cyan-500 border-cyan-500 text-white'
+                  : 'border-gray-300 bg-white hover:border-cyan-400'
+              }`}
+            >
+              {data.openInNewTab && (
+                <Check className="h-3 w-3 text-white" strokeWidth={3} />
+              )}
+            </label>
+          </div>
+          <label htmlFor="openInNewTab" className="text-sm text-gray-700 cursor-pointer flex items-center gap-1">
+            Open in new tab
+            <ExternalLink className="h-3 w-3" />
+          </label>
         </div>
       </div>
     </div>

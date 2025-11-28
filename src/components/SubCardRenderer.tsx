@@ -64,22 +64,23 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
   };
 
   return (
-    <div className="relative mb-6">
+    <div className="relative" style={{ marginBottom: '20px' }}>
       {/* Plus button above */}
       <div className="relative mb-3">
         <div className="group relative">
           <button
             onClick={() => setShowAboveMenu(!showAboveMenu)}
-            className="absolute -left-8 -top-2 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+            className="absolute -left-8 -top-2 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-all duration-300 z-20 hover:scale-110 transform hover:shadow-lg animate-pulse-gentle hover:animate-none"
+            title=""
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-3 w-3 transition-transform duration-300 group-hover:rotate-90" />
           </button>
           
-          {/* Custom tooltip */}
-          <div className="absolute left-2 -top-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30 delay-500">
-            <div className="bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap shadow-lg">
+          {/* Fixed tooltip */}
+          <div className="absolute left-4 -top-16 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-40 delay-200">
+            <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap shadow-xl border border-gray-700">
               Insert content above
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-transparent border-t-gray-900"></div>
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent border-t-gray-900"></div>
             </div>
           </div>
         </div>
@@ -103,26 +104,27 @@ const SubCardRenderer: React.FC<SubCardRendererProps> = ({ subcard, onUpdate, on
       </div>
 
       {/* Plus button below */}
-      <div className="relative">
+      <div className="relative" style={{ marginTop: '-12px' }}>
         <div className="group relative">
           <button
             onClick={() => setShowBelowMenu(!showBelowMenu)}
-            className="absolute -left-8 top-2 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+            className="absolute -left-8 -top-3 w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-sm transition-all duration-300 z-20 hover:scale-110 transform hover:shadow-lg animate-pulse-gentle hover:animate-none"
+            title=""
           >
-            <Plus className="h-3 w-3" />
+            <Plus className="h-3 w-3 transition-transform duration-300 group-hover:rotate-90" />
           </button>
           
-          {/* Custom tooltip */}
-          <div className="absolute left-2 -top-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30 delay-500">
-            <div className="bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap shadow-lg">
+          {/* Fixed tooltip */}
+          <div className="absolute left-4 -top-16 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-40 delay-200">
+            <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap shadow-xl border border-gray-700">
               Insert content below
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-transparent border-t-gray-900"></div>
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent border-t-gray-900"></div>
             </div>
           </div>
         </div>
         
         {showBelowMenu && (
-          <div className="absolute left-8 top-2 z-30">
+          <div className="absolute left-8 -top-3 z-30">
             <ContentTypeMenu
               onSelect={(type: string) => {
                 onInsertBelow(type);

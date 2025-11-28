@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, ChevronUp, ChevronDown, MousePointer } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown, MousePointer, Check, ExternalLink, Shield } from 'lucide-react';
 import type { CTAData } from '../../types';
 
 interface CTASubCardProps {
@@ -77,26 +77,63 @@ const CTASubCard: React.FC<CTASubCardProps> = ({ data, onUpdate, onDelete, onMov
           </div>
         </div>
         
-        <div className="flex space-x-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={data.isExternal || false}
-              onChange={(e) => handleChange('isExternal', e.target.checked)}
-              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">External Link</span>
-          </label>
+        {/* Styled Checkboxes */}
+        <div className="flex flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <input
+                type="checkbox"
+                id="isExternal"
+                checked={data.isExternal || false}
+                onChange={(e) => handleChange('isExternal', e.target.checked)}
+                className="sr-only"
+              />
+              <label
+                htmlFor="isExternal"
+                className={`relative flex items-center justify-center w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 ${
+                  data.isExternal
+                    ? 'bg-green-500 border-green-500 text-white'
+                    : 'border-gray-300 bg-white hover:border-green-400'
+                }`}
+              >
+                {data.isExternal && (
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                )}
+              </label>
+            </div>
+            <label htmlFor="isExternal" className="text-sm text-gray-700 cursor-pointer flex items-center gap-1">
+              External Link
+              <ExternalLink className="h-3 w-3" />
+            </label>
+          </div>
           
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={data.noFollow || false}
-              onChange={(e) => handleChange('noFollow', e.target.checked)}
-              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">No Follow</span>
-          </label>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <input
+                type="checkbox"
+                id="noFollow"
+                checked={data.noFollow || false}
+                onChange={(e) => handleChange('noFollow', e.target.checked)}
+                className="sr-only"
+              />
+              <label
+                htmlFor="noFollow"
+                className={`relative flex items-center justify-center w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 ${
+                  data.noFollow
+                    ? 'bg-green-500 border-green-500 text-white'
+                    : 'border-gray-300 bg-white hover:border-green-400'
+                }`}
+              >
+                {data.noFollow && (
+                  <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                )}
+              </label>
+            </div>
+            <label htmlFor="noFollow" className="text-sm text-gray-700 cursor-pointer flex items-center gap-1">
+              No Follow
+              <Shield className="h-3 w-3" />
+            </label>
+          </div>
         </div>
       </div>
     </div>

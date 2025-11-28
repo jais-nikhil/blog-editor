@@ -75,6 +75,14 @@ export interface AlsoReadData {
   title: string;
   url: string;
   description: string;
+  openInNewTab: boolean;
+}
+
+export interface StoryOption {
+  id: string;
+  title: string;
+  url: string;
+  description?: string;
 }
 
 export interface QuoteData {
