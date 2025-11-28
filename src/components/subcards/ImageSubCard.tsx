@@ -128,11 +128,11 @@ const ImageSubCard: React.FC<ImageSubCardProps> = ({ data, onUpdate, onDelete, o
           <div className="grid grid-cols-2 gap-4">
             {/* Left side - Image Preview */}
             <div className="space-y-2">
-              <div className="relative">
+              <div className="relative aspect-video">
                 <img
                   src={data.url}
                   alt={data.alt || 'Preview'}
-                  className="w-full h-32 object-cover rounded-md border border-gray-200"
+                  className="w-full h-full object-cover rounded-md border border-gray-200"
                 />
                 <div className="absolute top-2 right-2 flex gap-1">
                   <button

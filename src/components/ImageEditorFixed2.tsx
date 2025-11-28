@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { X, Save, RotateCcw, ChevronDown, ChevronRight, Crop, Sun, Filter, RotateCw } from 'lucide-react';
+import { X, Save, RotateCcw, ChevronDown, ChevronRight, Crop } from 'lucide-react';
 import { uploadImage } from '../utils/helpers';
 
 interface ImageEditorProps {
@@ -30,16 +30,6 @@ const aspectRatios = [
   { name: 'Custom', ratio: null, label: 'Free Form' }
 ];
 
-const imageFilters = [
-  { name: 'none', label: 'None', filter: '' },
-  { name: 'grayscale', label: 'Grayscale', filter: 'grayscale(100%)' },
-  { name: 'sepia', label: 'Sepia', filter: 'sepia(100%)' },
-  { name: 'blur', label: 'Blur', filter: 'blur(2px)' },
-  { name: 'vintage', label: 'Vintage', filter: 'sepia(50%) contrast(120%) brightness(110%)' },
-  { name: 'cold', label: 'Cold', filter: 'hue-rotate(90deg) saturate(120%)' },
-  { name: 'warm', label: 'Warm', filter: 'hue-rotate(-30deg) saturate(110%)' }
-];
-
 const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, onSave }) => {
   const [isEditing, setIsEditing] = useState(true);
   const [caption, setCaption] = useState('');
@@ -55,78 +45,42 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
   
   // Collapsible panel states
   const [showCrop, setShowCrop] = useState(true);
-  const [showAdjustments, setShowAdjustments] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  
-  // Editing features state
-  const [rotation, setRotation] = useState(0);
-  const [brightness, setBrightness] = useState(100);
-  const [contrast, setContrast] = useState(100);
-  const [saturation, setSaturation] = useState(100);
-  const [selectedFilter, setSelectedFilter] = useState('none');
-  
-  // Image bounds for crop constraint
-  const [imageBounds, setImageBounds] = useState({ x: 0, y: 0, width: 0, height: 0 });
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const cropContainerRef = useRef<HTMLDivElement>(null);
 
-  // Calculate image bounds within container
-  const calculateImageBounds = useCallback(() => {
-    if (!imageRef.current || !cropContainerRef.current) return;
-    
-    const img = imageRef.current;
-    const container = cropContainerRef.current;
-    const containerRect = container.getBoundingClientRect();
-    const imgRect = img.getBoundingClientRect();
-    
-    // Calculate image position relative to container
-    const bounds = {
-      x: imgRect.left - containerRect.left,
-      y: imgRect.top - containerRect.top,
-      width: imgRect.width,
-      height: imgRect.height
-    };
-    
-    setImageBounds(bounds);
-    return bounds;
-  }, []);
-
   // Initialize crop area when aspect ratio changes
   useEffect(() => {
-    if (selectedRatio.ratio && imageBounds.width > 0) {
+    if (selectedRatio.ratio) {
       const ratio = selectedRatio.ratio;
       
-      // Constrain crop to image bounds
-      const maxWidth = imageBounds.width * 0.9;
-      const maxHeight = imageBounds.height * 0.9;
+      // Use full width by default, calculate height based on aspect ratio
+      const cropWidth = containerSize.width * 0.95; // 95% of container width
+      const cropHeight = cropWidth / ratio;
       
-      let cropWidth = maxWidth;
-      let cropHeight = cropWidth / ratio;
-      
-      // If calculated height exceeds image bounds, fit by height
-      if (cropHeight > maxHeight) {
-        cropHeight = maxHeight;
-        cropWidth = cropHeight * ratio;
+      // If calculated height exceeds container, fit by height instead
+      if (cropHeight > containerSize.height * 0.95) {
+        const adjustedHeight = containerSize.height * 0.95;
+        const adjustedWidth = adjustedHeight * ratio;
+        
+        setCropArea({
+          x: (containerSize.width - adjustedWidth) / 2,
+          y: (containerSize.height - adjustedHeight) / 2,
+          width: adjustedWidth,
+          height: adjustedHeight
+        });
+      } else {
+        // Use full width approach
+        setCropArea({
+          x: (containerSize.width - cropWidth) / 2,
+          y: (containerSize.height - cropHeight) / 2,
+          width: cropWidth,
+          height: cropHeight
+        });
       }
-      
-      setCropArea({
-        x: imageBounds.x + (imageBounds.width - cropWidth) / 2,
-        y: imageBounds.y + (imageBounds.height - cropHeight) / 2,
-        width: cropWidth,
-        height: cropHeight
-      });
     }
-  }, [selectedRatio.ratio, imageBounds]);
-  
-  // Calculate image bounds when image loads
-  useEffect(() => {
-    const img = imageRef.current;
-    if (img && img.complete) {
-      setTimeout(calculateImageBounds, 100);
-    }
-  }, [imageUrl, calculateImageBounds]);
+  }, [selectedRatio.ratio, containerSize.width, containerSize.height]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (!isEditing) return;
@@ -247,18 +201,13 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
           return;
       }
       
-      // Final boundary checks - constrain to image bounds
-      const minX = imageBounds.x;
-      const minY = imageBounds.y;
-      const maxX = imageBounds.x + imageBounds.width - newWidth;
-      const maxY = imageBounds.y + imageBounds.height - newHeight;
+      // Final boundary checks
+      newX = Math.max(0, Math.min(containerSize.width - newWidth, newX));
+      newY = Math.max(0, Math.min(containerSize.height - newHeight, newY));
       
-      newX = Math.max(minX, Math.min(maxX, newX));
-      newY = Math.max(minY, Math.min(maxY, newY));
-      
-      // Ensure dimensions don't exceed image bounds
-      newWidth = Math.min(newWidth, imageBounds.width);
-      newHeight = Math.min(newHeight, imageBounds.height);
+      // Ensure dimensions don't exceed container
+      newWidth = Math.min(newWidth, containerSize.width - newX);
+      newHeight = Math.min(newHeight, containerSize.height - newY);
       
       setCropArea({
         x: newX,
@@ -268,19 +217,17 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
       });
       
     } else if (isDragging) {
-      // Handle dragging - constrain to image bounds
+      // Handle dragging
       const x = mouseX - dragStart.x;
       const y = mouseY - dragStart.y;
       
-      const minX = imageBounds.x;
-      const minY = imageBounds.y;
-      const maxX = imageBounds.x + imageBounds.width - cropArea.width;
-      const maxY = imageBounds.y + imageBounds.height - cropArea.height;
+      const maxX = containerSize.width - cropArea.width;
+      const maxY = containerSize.height - cropArea.height;
       
       setCropArea(prev => ({
         ...prev,
-        x: Math.max(minX, Math.min(maxX, x)),
-        y: Math.max(minY, Math.min(maxY, y))
+        x: Math.max(0, Math.min(maxX, x)),
+        y: Math.max(0, Math.min(maxY, y))
       }));
     }
   }, [isDragging, isResizing, isEditing, dragStart, containerSize, cropArea, resizeHandle, selectedRatio.ratio]);
@@ -290,30 +237,6 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
     setIsResizing(false);
     setResizeHandle('');
   }, []);
-
-  const getImageStyle = () => {
-    const filterValue = imageFilters.find(f => f.name === selectedFilter)?.filter || '';
-    const customFilters = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
-    const combinedFilters = filterValue ? `${filterValue} ${customFilters}` : customFilters;
-    
-    return {
-      transform: `rotate(${rotation}deg)`,
-      filter: combinedFilters,
-      transition: 'all 0.3s ease'
-    };
-  };
-
-  const rotateImage = (degrees: number) => {
-    setRotation(prev => (prev + degrees) % 360);
-  };
-
-  const resetAllAdjustments = () => {
-    setRotation(0);
-    setBrightness(100);
-    setContrast(100);
-    setSaturation(100);
-    setSelectedFilter('none');
-  };
 
   const handleCropImage = async () => {
     if (!imageRef.current || !canvasRef.current || !imageUrl) return;
@@ -443,116 +366,6 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
                 )}
               </div>
 
-              {/* Adjustments Panel */}
-              <div className="mb-6">
-                <button
-                  onClick={() => setShowAdjustments(!showAdjustments)}
-                  className="flex items-center justify-between w-full text-left font-semibold text-gray-900 mb-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <Sun className="h-4 w-4" />
-                    <span>Adjustments</span>
-                  </div>
-                  {showAdjustments ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </button>
-                
-                {showAdjustments && (
-                  <div className="space-y-4 pl-6">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => rotateImage(-90)}
-                        className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        <RotateCcw className="h-3 w-3" />
-                        Left
-                      </button>
-                      <button
-                        onClick={() => rotateImage(90)}
-                        className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        <RotateCw className="h-3 w-3" />
-                        Right
-                      </button>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm text-gray-700 mb-1">Brightness: {brightness}%</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="200"
-                        value={brightness}
-                        onChange={(e) => setBrightness(Number(e.target.value))}
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm text-gray-700 mb-1">Contrast: {contrast}%</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="200"
-                        value={contrast}
-                        onChange={(e) => setContrast(Number(e.target.value))}
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm text-gray-700 mb-1">Saturation: {saturation}%</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="200"
-                        value={saturation}
-                        onChange={(e) => setSaturation(Number(e.target.value))}
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <button
-                      onClick={resetAllAdjustments}
-                      className="text-sm text-blue-500 hover:text-blue-600"
-                    >
-                      Reset All
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Filters Panel */}
-              <div className="mb-6">
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center justify-between w-full text-left font-semibold text-gray-900 mb-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    <span>Filters</span>
-                  </div>
-                  {showFilters ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </button>
-                
-                {showFilters && (
-                  <div className="grid grid-cols-2 gap-2 pl-6">
-                    {imageFilters.map((filter) => (
-                      <button
-                        key={filter.name}
-                        onClick={() => setSelectedFilter(filter.name)}
-                        className={`px-2 py-2 text-xs rounded-md transition-colors ${
-                          selectedFilter === filter.name
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                      >
-                        {filter.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Image Details */}
               <div className="space-y-4">
                 <h4 className="font-semibold text-gray-900">Image Details</h4>
@@ -617,7 +430,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
                 Apply Crop
               </button>
               <button
-                onClick={onClose}
+                onClick={() => setIsEditing(false)}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
               >
                 <RotateCcw className="h-4 w-4" />
@@ -650,8 +463,6 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
                     alt="Preview"
                     className="w-full h-full object-contain"
                     draggable={false}
-                    style={getImageStyle()}
-                    onLoad={calculateImageBounds}
                   />
                   
                   {/* Crop Overlay */}
