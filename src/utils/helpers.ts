@@ -3,6 +3,7 @@ export const generateId = (): string => {
 };
 
 export const contentTypes = [
+  { id: 'text', name: 'Rich Text', icon: 'Type', component: 'TextSubCard' },
   { id: 'blockquote', name: 'Blockquote', icon: 'Quote', component: 'BlockquoteSubCard' },
   { id: 'cta', name: 'CTA', icon: 'ExternalLink', component: 'CTASubCard' },
   { id: 'bigfact', name: 'Big Fact', icon: 'TrendingUp', component: 'BigFactSubCard' },
@@ -16,3 +17,21 @@ export const contentTypes = [
   { id: 'embed', name: 'Embed', icon: 'Code', component: 'EmbedSubCard' },
   { id: 'table', name: 'Table', icon: 'Table', component: 'TableSubCard' },
 ];
+
+// Dummy API function for image upload
+export const uploadImage = async (imageBlob: Blob): Promise<string> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // In a real implementation, you would send the blob to your server
+  // For now, we'll just return a URL to the blob
+  const url = URL.createObjectURL(imageBlob);
+  
+  console.log('Image uploaded successfully (dummy):', {
+    size: imageBlob.size,
+    type: imageBlob.type,
+    url
+  });
+  
+  return url;
+};

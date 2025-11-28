@@ -25,6 +25,10 @@ export interface BlogEditorState {
 }
 
 // Content type data structures
+export interface TextData {
+  content: string;
+}
+
 export interface BlockquoteData {
   title: string;
   attribute: string;
@@ -64,6 +68,7 @@ export interface ImageData {
   url: string;
   alt: string;
   caption: string;
+  credit: string;
 }
 
 export interface AlsoReadData {

@@ -1,26 +1,45 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import type { EmbedData } from '../../types';
 
 interface EmbedSubCardProps {
   data: Partial<EmbedData>;
   onUpdate: (data: Record<string, any>) => void;
   onDelete: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 }
 
-const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete }) => {
+const EmbedSubCard: React.FC<EmbedSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
   const handleChange = (field: keyof EmbedData, value: string) => {
     onUpdate({ ...data, [field]: value });
   };
 
   return (
     <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg relative">
-      <button
-        onClick={onDelete}
-        className="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+      <div className="absolute top-2 right-2 flex gap-1">
+        <button
+          onClick={onMoveUp}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move up"
+        >
+          <ChevronUp className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onMoveDown}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move down"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onDelete}
+          className="text-red-400 hover:text-red-600 transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
       
       <h4 className="text-sm font-medium text-red-800 mb-3">Embed</h4>
       

@@ -1,14 +1,16 @@
 import React from 'react';
-import { Trash2, Plus, X } from 'lucide-react';
+import { Trash2, Plus, X, ChevronUp, ChevronDown } from 'lucide-react';
 import type { TableData } from '../../types';
 
 interface TableSubCardProps {
   data: Partial<TableData>;
   onUpdate: (data: Record<string, any>) => void;
   onDelete: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 }
 
-const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete }) => {
+const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
   const headers = data.headers || ['Header 1', 'Header 2'];
   const rows = data.rows || [['', '']];
 
@@ -66,12 +68,29 @@ const TableSubCard: React.FC<TableSubCardProps> = ({ data, onUpdate, onDelete })
 
   return (
     <div className="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg relative">
-      <button
-        onClick={onDelete}
-        className="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+      <div className="absolute top-2 right-2 flex gap-1">
+        <button
+          onClick={onMoveUp}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move up"
+        >
+          <ChevronUp className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onMoveDown}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move down"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onDelete}
+          className="text-red-400 hover:text-red-600 transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
       
       <h4 className="text-sm font-medium text-emerald-800 mb-3">Table</h4>
       

@@ -1,14 +1,16 @@
 import React from 'react';
-import { Trash2, Plus, X } from 'lucide-react';
+import { Trash2, Plus, X, ChevronUp, ChevronDown } from 'lucide-react';
 import type { SummaryData } from '../../types';
 
 interface SummarySubCardProps {
   data: Partial<SummaryData>;
   onUpdate: (data: Record<string, any>) => void;
   onDelete: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 }
 
-const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelete }) => {
+const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
   const points = data.points || [''];
 
   const handleTitleChange = (value: string) => {
@@ -34,12 +36,29 @@ const SummarySubCard: React.FC<SummarySubCardProps> = ({ data, onUpdate, onDelet
 
   return (
     <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg relative">
-      <button
-        onClick={onDelete}
-        className="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-colors"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+      <div className="absolute top-2 right-2 flex gap-1">
+        <button
+          onClick={onMoveUp}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move up"
+        >
+          <ChevronUp className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onMoveDown}
+          className="text-gray-400 hover:text-gray-600 transition-colors"
+          title="Move down"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onDelete}
+          className="text-red-400 hover:text-red-600 transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
       
       <h4 className="text-sm font-medium text-yellow-800 mb-3">Summary</h4>
       

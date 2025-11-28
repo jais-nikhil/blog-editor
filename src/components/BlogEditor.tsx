@@ -64,6 +64,24 @@ const BlogEditor: React.FC = () => {
     }));
   }, []);
 
+  const insertSubCard = useCallback((cardId: string, subcardId: string, newSubcard: SubCard, position: 'above' | 'below') => {
+    setState(prev => ({
+      ...prev,
+      cards: prev.cards.map(card => {
+        if (card.id !== cardId) return card;
+        
+        const subcardIndex = card.subcards.findIndex(sc => sc.id === subcardId);
+        if (subcardIndex === -1) return card;
+        
+        const insertIndex = position === 'above' ? subcardIndex : subcardIndex + 1;
+        const newSubcards = [...card.subcards];
+        newSubcards.splice(insertIndex, 0, newSubcard);
+        
+        return { ...card, subcards: newSubcards };
+      }),
+    }));
+  }, []);
+
   const updateSubCard = useCallback((cardId: string, subcardId: string, data: Record<string, any>) => {
     setState(prev => ({
       ...prev,
@@ -77,6 +95,38 @@ const BlogEditor: React.FC = () => {
             }
           : card
       ),
+    }));
+  }, []);
+
+  const moveSubCard = useCallback((cardId: string, subcardId: string, direction: 'up' | 'down') => {
+    setState(prev => ({
+      ...prev,
+      cards: prev.cards.map(card => {
+        if (card.id !== cardId) return card;
+        
+        const topSubcards = card.subcards.filter(sc => sc.position === 'top');
+        const bottomSubcards = card.subcards.filter(sc => sc.position === 'bottom');
+        
+        const moveInArray = (arr: SubCard[]) => {
+          const index = arr.findIndex(sc => sc.id === subcardId);
+          if (index === -1) return arr;
+          
+          const newIndex = direction === 'up' ? index - 1 : index + 1;
+          if (newIndex < 0 || newIndex >= arr.length) return arr;
+          
+          const newArray = [...arr];
+          [newArray[index], newArray[newIndex]] = [newArray[newIndex], newArray[index]];
+          return newArray;
+        };
+        
+        const newTopSubcards = moveInArray(topSubcards);
+        const newBottomSubcards = moveInArray(bottomSubcards);
+        
+        return {
+          ...card,
+          subcards: [...newTopSubcards, ...newBottomSubcards],
+        };
+      }),
     }));
   }, []);
 
@@ -173,6 +223,8 @@ const BlogEditor: React.FC = () => {
               onAddSubCard={addSubCard}
               onUpdateSubCard={updateSubCard}
               onDeleteSubCard={deleteSubCard}
+              onMoveSubCard={moveSubCard}
+              onInsertSubCard={insertSubCard}
             />
           ))}
         </SortableContext>

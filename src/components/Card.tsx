@@ -13,6 +13,8 @@ interface CardProps {
   onAddSubCard: (cardId: string, subcard: SubCard) => void;
   onUpdateSubCard: (cardId: string, subcardId: string, data: Record<string, any>) => void;
   onDeleteSubCard: (cardId: string, subcardId: string) => void;
+  onMoveSubCard: (cardId: string, subcardId: string, direction: 'up' | 'down') => void;
+  onInsertSubCard: (cardId: string, subcardId: string, newSubcard: SubCard, position: 'above' | 'below') => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -22,6 +24,8 @@ const Card: React.FC<CardProps> = ({
   onAddSubCard,
   onUpdateSubCard,
   onDeleteSubCard,
+  onMoveSubCard,
+  onInsertSubCard,
 }) => {
   const [showTopMenu, setShowTopMenu] = useState(false);
   const [showBottomMenu, setShowBottomMenu] = useState(false);
@@ -94,13 +98,14 @@ const Card: React.FC<CardProps> = ({
       <div className="relative mb-4">
         <button
           onClick={() => setShowTopMenu(!showTopMenu)}
-          className="absolute -left-8 top-2 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          className="absolute -left-8 -top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          title="Add content above"
         >
           <Plus className="h-4 w-4" />
         </button>
         
         {showTopMenu && (
-          <div className="absolute -left-2 top-10 z-20">
+          <div className="absolute left-8 top-0 z-20">
             <ContentTypeMenu
               onSelect={(type: string) => handleAddSubCard(type, 'top')}
               onClose={() => setShowTopMenu(false)}
@@ -116,6 +121,26 @@ const Card: React.FC<CardProps> = ({
             subcard={subcard}
             onUpdate={(data: Record<string, any>) => onUpdateSubCard(card.id, subcard.id, data)}
             onDelete={() => onDeleteSubCard(card.id, subcard.id)}
+            onMoveUp={() => onMoveSubCard(card.id, subcard.id, 'up')}
+            onMoveDown={() => onMoveSubCard(card.id, subcard.id, 'down')}
+            onInsertAbove={(type: string) => {
+              const newSubCard: SubCard = {
+                id: Math.random().toString(36).substr(2, 9),
+                type,
+                data: {},
+                position: subcard.position,
+              };
+              onInsertSubCard(card.id, subcard.id, newSubCard, 'above');
+            }}
+            onInsertBelow={(type: string) => {
+              const newSubCard: SubCard = {
+                id: Math.random().toString(36).substr(2, 9),
+                type,
+                data: {},
+                position: subcard.position,
+              };
+              onInsertSubCard(card.id, subcard.id, newSubCard, 'below');
+            }}
           />
         </div>
       ))}
@@ -136,6 +161,26 @@ const Card: React.FC<CardProps> = ({
             subcard={subcard}
             onUpdate={(data: Record<string, any>) => onUpdateSubCard(card.id, subcard.id, data)}
             onDelete={() => onDeleteSubCard(card.id, subcard.id)}
+            onMoveUp={() => onMoveSubCard(card.id, subcard.id, 'up')}
+            onMoveDown={() => onMoveSubCard(card.id, subcard.id, 'down')}
+            onInsertAbove={(type: string) => {
+              const newSubCard: SubCard = {
+                id: Math.random().toString(36).substr(2, 9),
+                type,
+                data: {},
+                position: subcard.position,
+              };
+              onInsertSubCard(card.id, subcard.id, newSubCard, 'above');
+            }}
+            onInsertBelow={(type: string) => {
+              const newSubCard: SubCard = {
+                id: Math.random().toString(36).substr(2, 9),
+                type,
+                data: {},
+                position: subcard.position,
+              };
+              onInsertSubCard(card.id, subcard.id, newSubCard, 'below');
+            }}
           />
         </div>
       ))}
@@ -144,13 +189,14 @@ const Card: React.FC<CardProps> = ({
       <div className="relative">
         <button
           onClick={() => setShowBottomMenu(!showBottomMenu)}
-          className="absolute -left-8 top-2 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          className="absolute -left-8 top-4 w-6 h-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-sm transition-colors z-10"
+          title="Add content below"
         >
           <Plus className="h-4 w-4" />
         </button>
         
         {showBottomMenu && (
-          <div className="absolute -left-2 top-10 z-20">
+          <div className="absolute left-8 top-0 z-20">
             <ContentTypeMenu
               onSelect={(type: string) => handleAddSubCard(type, 'bottom')}
               onClose={() => setShowBottomMenu(false)}
