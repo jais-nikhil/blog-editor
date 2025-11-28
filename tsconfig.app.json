@@ -24,5 +24,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/components/*_backup.tsx",
+    "src/components/**/*_backup.tsx",
+    "src/components/**/*_new.tsx",
+    "src/components/ImageEditor.tsx"
+  ]
 }

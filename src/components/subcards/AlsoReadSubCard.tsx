@@ -40,7 +40,7 @@ const AlsoReadSubCard: React.FC<AlsoReadSubCardProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // React Hook Form setup with validation
-  const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormValues>({
+  const { control, setValue, watch, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       title: data.title || '',
       url: data.url || '',

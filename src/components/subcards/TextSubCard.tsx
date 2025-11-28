@@ -15,7 +15,7 @@ interface TextSubCardProps {
   validationErrors?: Array<{ field: string; message: string }>;
 }
 
-const TextSubCard: React.FC<TextSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown, validationErrors = [] }) => {
+const TextSubCard: React.FC<TextSubCardProps> = ({ data, onUpdate, onDelete, onMoveUp, onMoveDown }) => {
   const handleContentChange = (content: string) => {
     onUpdate({ ...data, content });
   };
