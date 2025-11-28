@@ -1,317 +1,477 @@
-# Blog Editor
+# NextGen Blog Editor
 
-A comprehensive ReactJS + Vite + Tailwind CSS application for creating rich blog content with multiple content types and drag-and-drop functionality.
+[![npm version](https://badge.fury.io/js/nextgen-blog-editor.svg)](https://www.npmjs.com/package/nextgen-blog-editor)
+[![npm downloads](https://img.shields.io/npm/dm/nextgen-blog-editor.svg)](https://www.npmjs.com/package/nextgen-blog-editor)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18%20%7C%2019-blue)](https://reactjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-Compatible-black)](https://nextjs.org/)
 
-## ✨ What's New (v2.0.0)
+> **The most powerful and flexible blog editor component for React and Next.js** - Built with TypeScript, featuring rich text editing, drag-and-drop functionality, 13+ content types, and comprehensive validation.
 
-### 🎬 Smart Embed Component
+## 🚀 Why NextGen Blog Editor?
 
-Auto-detect and embed content from major platforms:
+NextGen Blog Editor is a **modern, production-ready WYSIWYG editor** designed specifically for React and Next.js applications. Whether you're building a blog platform, CMS, content management system, or any application requiring rich content editing, NextGen Blog Editor provides everything you need out of the box.
 
-- **YouTube**: Paste any YouTube URL for instant video embed
-- **Vimeo**: Support for Vimeo video embeds
-- **Twitter/X**: Embed tweets with live rendering
-- **Instagram**: Display Instagram posts and reels
-- **LinkedIn**: Embed LinkedIn posts
-- Live preview with automatic platform detection
-- Clean code storage (no script duplication)
+### ⚡ Key Features
 
-### ✅ Intelligent Validation System
+- ✅ **13+ Content Types** - Text, Images, Blockquotes, CTAs, Embeds, Tables, Q&A, and more
+- ✅ **Rich Text Editing** - Powered by TipTap with full formatting support
+- ✅ **Drag & Drop** - Intuitive reordering of content blocks
+- ✅ **Image Editor** - Built-in crop and edit functionality
+- ✅ **Form Validation** - Comprehensive inline and panel validation
+- ✅ **TypeScript Support** - Fully typed for excellent DX
+- ✅ **Responsive Design** - Works perfectly on desktop, tablet, and mobile
+- ✅ **Zero Configuration** - Works out of the box with sensible defaults
+- ✅ **Next.js Ready** - Full support for App Router and Pages Router
+- ✅ **SEO Friendly** - Generates clean, semantic HTML
+- ✅ **Accessible** - WCAG AA compliant
+- ✅ **Customizable** - Easy to style and extend
 
-- **Smart Empty Detection**: Empty subcards removed automatically
-- **Partial Content Validation**: Only validates fields with content
-- **Beautiful Error Display**: Floating panel with actionable errors
-- **Click-to-Navigate**: Scroll directly to any validation error
-- **Field-Specific Rules**: Custom validation for all 13 content types
-- **No More Alerts**: Replaced blocking alerts with elegant error UI
+## 📦 Installation
 
-**See [NEW_FEATURES.md](./NEW_FEATURES.md) for detailed documentation.**
-
-## Features
-
-### Core Functionality
-
-- **Rich Text Editor**: Built with React Quill for comprehensive text formatting
-- **Card-based Content System**: Organize content in draggable cards
-- **Multiple Content Types**: Support for 12 different content types:
-  - Text (Rich Text Editor)
-  - Blockquote
-  - Call to Action (CTA)
-  - Big Fact
-  - Blurp
-  - Question
-  - Q & A
-  - Summary
-  - Image
-  - Also Read
-  - Quote
-  - Embed
-  - Table
-
-### User Experience
-
-- **Drag and Drop**: Reorder cards and subcards with @dnd-kit
-- **Dynamic Content Creation**: Add and remove cards and subcards on the fly
-- **Smart Form Validation**: Automatic cleanup of empty content on submission
-- **Responsive Design**: Works seamlessly across different screen sizes
-
-## Technologies Used
-
-- **React 19** with TypeScript for robust component development
-- **Vite** for fast development and building
-- **Tailwind CSS 3.5** for modern, utility-first styling
-- **React Quill** for rich text editing capabilities
-- **@dnd-kit** for smooth drag and drop interactions
-- **Lucide React** for beautiful, consistent icons
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation & Setup
-
-1. **Clone and install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-2. **Start development server:**
-
-   ```bash
-   npm run dev
-   ```
-
-3. **Open in browser:**
-   Navigate to `http://localhost:5173`
-
-### Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-## How to Use
-
-### Basic Usage
-
-1. **Writing Content**: Use the rich text editor in the main card to write your blog content
-2. **Adding Content Types**: Click the + icons (top/bottom) to add different content types
-3. **Creating New Cards**: Use the "Add Card" button to create additional content cards
-4. **Reordering**: Drag cards using the grip handle to reorder them
-5. **Deleting**: Click the trash icon to delete cards or content blocks
-6. **Submitting**: Click "Submit Blog" to finalize your content
-
-### Content Types Available
-
-Each content type has specific fields:
-
-- **Blockquote**: Quote text + Attribution
-- **CTA**: Title + Action URL + Link options (External, NoFollow)
-- **Big Fact**: Main fact + Description
-- **Blurp**: Simple content block
-- **Question**: Standalone question
-- **Q & A**: Question + Answer pair
-- **Summary**: Title + Bullet points (add/remove points)
-- **Image**: URL + Alt text + Caption (with preview)
-- **Also Read**: Title + URL + Description
-- **Quote**: Quote + Author + Source
-- **Embed**: HTML embed code + Type selection (with preview)
-- **Table**: Dynamic table (add/remove columns and rows)
-
-### Smart Features
-
-- **Auto-cleanup**: Empty cards and content blocks are automatically removed on submission
-- **Position Control**: Add content above or below the rich text editor using top/bottom + buttons
-- **Drag & Drop**: Reorder all cards and content blocks
-- **Real-time Preview**: See images and embeds as you add them
-
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── BlogEditor.tsx          # Main editor component
-│   ├── Card.tsx               # Individual card container
-│   ├── ContentTypeMenu.tsx    # Content type selection menu
-│   ├── SubCardRenderer.tsx    # Renders different content types
-│   ├── index.ts              # Component exports
-│   └── subcards/             # Individual content type components
-│       ├── BlockquoteSubCard.tsx
-│       ├── CTASubCard.tsx
-│       ├── BigFactSubCard.tsx
-│       ├── BlurpSubCard.tsx
-│       ├── QuestionSubCard.tsx
-│       ├── QASubCard.tsx
-│       ├── SummarySubCard.tsx
-│       ├── ImageSubCard.tsx
-│       ├── AlsoReadSubCard.tsx
-│       ├── QuoteSubCard.tsx
-│       ├── EmbedSubCard.tsx
-│       └── TableSubCard.tsx
-├── types/
-│   └── index.ts              # TypeScript type definitions
-├── utils/
-│   └── helpers.ts            # Utility functions
-├── App.tsx                   # Main app component
-└── main.tsx                  # App entry point
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-## 📚 Documentation
-
-### Complete Guides
-
-- **[NEW_FEATURES.md](./NEW_FEATURES.md)** - Detailed feature documentation with examples
-- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - 15 comprehensive test scenarios
-- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - Quick lookup for common tasks
-- **[SUMMARY.md](./SUMMARY.md)** - Executive summary of v2.0 updates
-
-### Quick Links
-
-- **Embed Component**: Support for YouTube, Vimeo, X, Instagram, LinkedIn
-- **Validation System**: Smart validation with beautiful error displays
-- **All Subcard Types**: Text, Blockquote, CTA, Big Fact, Blurp, Question, Q&A, Summary, Image, Also Read, Quote, Embed, Table
-
-## 🧪 Testing
-
-Run the test scenarios from [TESTING_GUIDE.md](./TESTING_GUIDE.md):
+### NPM
 
 ```bash
-# Start dev server
-npm run dev
-
-# Test embed detection
-# 1. Add Embed subcard
-# 2. Paste: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-# 3. See auto-detection and live preview
-
-# Test validation
-# 1. Add CTA with title only (no URL)
-# 2. Click Submit Blog
-# 3. See validation panel with errors
-# 4. Click error to scroll to field
+npm install nextgen-blog-editor
 ```
 
-## 🎯 Key Features in Detail
+### Yarn
 
-### Smart Embed Detection
-
-```typescript
-// Supported formats:
-- YouTube: URLs, short links, embed codes
-- Vimeo: URLs, player iframes
-- Twitter/X: Tweet URLs, blockquote embeds
-- Instagram: Post/reel URLs, media embeds
-- LinkedIn: Post URLs, feed iframes
+```bash
+yarn add nextgen-blog-editor
 ```
 
-### Validation Rules
+### PNPM
 
-- **Empty subcards**: Removed silently (no errors)
-- **Partial content**: Validated with clear error messages
-- **URL fields**: Must start with http:// or https://
-- **Image alt text**: Required for accessibility
-- **All 13 types**: Custom validation rules per content type
+```bash
+pnpm add nextgen-blog-editor
+```
+
+## 🎯 Quick Start
+
+### React + Vite
+
+```tsx
+import { BlogEditor } from 'nextgen-blog-editor';
+import 'nextgen-blog-editor/style.css';
+
+function App() {
+  return (
+    <div className="container mx-auto p-4">
+      <h1>My Blog Editor</h1>
+      <BlogEditor />
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Next.js (App Router)
+
+```tsx
+'use client';
+
+import { BlogEditor } from 'nextgen-blog-editor';
+import 'nextgen-blog-editor/style.css';
+
+export default function EditorPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <h1>Blog Editor</h1>
+      <BlogEditor />
+    </div>
+  );
+}
+```
+
+### Next.js (Pages Router)
+
+```tsx
+import { BlogEditor } from 'nextgen-blog-editor';
+import 'nextgen-blog-editor/style.css';
+
+export default function EditorPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <h1>Blog Editor</h1>
+      <BlogEditor />
+    </div>
+  );
+}
+```
+
+## 📚 Content Types
+
+NextGen Blog Editor supports 13+ different content types out of the box:
+
+### 📝 Text & Typography
+
+- **Text Blocks** - Rich text with formatting (bold, italic, underline, links, lists)
+- **Blockquotes** - Beautiful styled quotes with attribution
+- **Big Facts** - Highlight important statistics or facts
+- **Blurps** - Short, impactful text snippets
+
+### 🎯 Interactive Elements
+
+- **Call-to-Action (CTA)** - Buttons with customizable text and URLs
+- **Questions** - Standalone question blocks
+- **Q&A Sections** - Question and answer pairs
+- **Tables** - Full-featured data tables with TipTap
+
+### 🖼️ Media & Embeds
+
+- **Images** - Upload with built-in crop/edit functionality
+- **Embeds** - YouTube, Vimeo, Twitter, and custom embed support
+
+### 📌 Navigation
+
+- **Also Read** - Related articles/links section
+- **Summary** - Article summaries with optional links
+- **Quotes** - Author quotes with attribution
+
+## 🎨 Features in Detail
+
+### Rich Text Editor
+
+Powered by [TipTap](https://tiptap.dev/), the editor includes:
+
+- **Text Formatting**: Bold, Italic, Underline, Strike-through
+- **Lists**: Ordered and unordered lists
+- **Links**: Add and edit hyperlinks
+- **Headings**: H1-H6 support
+- **Alignment**: Left, center, right, justify
+- **Code Blocks**: Syntax-highlighted code snippets
+- **Horizontal Rules**: Visual separators
+
+### Drag & Drop
+
+Built with [@dnd-kit](https://dndkit.com/), featuring:
+
+- Smooth animations
+- Keyboard accessibility
+- Touch device support
+- Nested drag & drop for subcards
+- Visual feedback during dragging
+
+### Validation System
+
+Comprehensive validation with:
+
+- **Inline Error Messages** - Show errors directly under fields
+- **Error Panel** - Consolidated view of all validation errors
+- **Required Field Validation** - Ensure critical fields are filled
+- **URL Validation** - Validate URLs for CTAs and links
+- **Image Validation** - Ensure images have alt text
+- **Custom Validation** - Add your own validation rules
+
+### Image Editing
+
+Built-in image editor powered by [react-image-crop](https://github.com/DominicTobias/react-image-crop):
+
+- Crop images to any aspect ratio
+- Visual crop preview
+- Drag to adjust crop area
+- Upload local images
+- Image validation (alt text required)
+
+## 🔧 Advanced Usage
+
+### Handling Export
+
+```tsx
+import { BlogEditor } from 'nextgen-blog-editor';
+import 'nextgen-blog-editor/style.css';
+import type { BlogEditorState } from 'nextgen-blog-editor';
+
+function BlogEditorPage() {
+  const handleExport = (data: BlogEditorState) => {
+    console.log('Exported data:', data);
+    
+    // Send to your API
+    await fetch('/api/blog/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  };
+
+  return <BlogEditor onExport={handleExport} />;
+}
+```
+
+### TypeScript Support
+
+```tsx
+import {
+  BlogEditor,
+  type BlogEditorState,
+  type Card,
+  type SubCard,
+  type TextData,
+  type ImageData,
+  type CTAData,
+  type ValidationError,
+} from 'nextgen-blog-editor';
+
+// Full type safety for your blog content
+const processContent = (state: BlogEditorState) => {
+  state.cards.forEach((card: Card) => {
+    console.log('Card content:', card.content);
+    
+    card.subcards.forEach((subcard: SubCard) => {
+      if (subcard.type === 'text') {
+        const textData = subcard.data as TextData;
+        console.log('Text content:', textData.content);
+      }
+    });
+  });
+};
+```
+
+### Custom Validation
+
+```tsx
+import { validateSubcard, type ValidationError } from 'nextgen-blog-editor';
+
+// Use built-in validation
+const errors: ValidationError[] = validateSubcard(subcard);
+
+// Add custom validation
+if (errors.length > 0) {
+  console.error('Validation errors:', errors);
+}
+```
+
+## 🎯 Use Cases
+
+### Blog Platforms
+
+Perfect for building modern blog platforms with rich content editing:
+
+- Personal blogs
+- Company blogs
+- Magazine websites
+- News portals
+- Content marketing platforms
+
+### Content Management Systems (CMS)
+
+Ideal for headless CMS and traditional CMS:
+
+- Admin panels
+- Content creation workflows
+- Multi-author platforms
+- Editorial systems
+- Publishing platforms
+
+### Documentation Sites
+
+Great for documentation and knowledge bases:
+
+- Technical documentation
+- User guides
+- API documentation
+- Wiki systems
+- Help centers
+
+### E-commerce
+
+Enhance product descriptions and content:
+
+- Product descriptions
+- Category pages
+- Blog posts
+- Landing pages
+- Email campaigns
+
+## 🌟 Why Choose NextGen Blog Editor?
+
+### 🚀 Modern Technology Stack
+
+- Built with **React 19** and **TypeScript**
+- Powered by **TipTap** for rich text editing
+- Uses **@dnd-kit** for accessibility-first drag and drop
+- Styled with **Tailwind CSS 3.5**
+- Zero jQuery, zero legacy dependencies
+
+### 💪 Production Ready
+
+- Comprehensive test coverage
+- Type-safe with TypeScript
+- Accessible (WCAG AA)
+- Mobile responsive
+- Cross-browser compatible
+- Performance optimized
+
+### 🎨 Developer Friendly
+
+- Zero configuration needed
+- Excellent TypeScript support
+- Comprehensive documentation
+- Active maintenance
+- MIT License
+
+### 📦 Lightweight
+
+- **~159 KB** total package size
+- **~32 KB** gzipped
+- Tree-shakeable
+- No bloat, only features you need
+
+## 🔌 Integrations
+
+NextGen Blog Editor works seamlessly with:
+
+- ✅ **React 18+** - Full support for latest React features
+- ✅ **React 19** - Ready for React 19
+- ✅ **Next.js 13+** - App Router and Pages Router
+- ✅ **Vite** - Fast dev server and HMR
+- ✅ **Create React App** - Works out of the box
+- ✅ **Remix** - Full compatibility
+- ✅ **Gatsby** - SSR and SSG support
+- ✅ **TypeScript 5+** - Full type definitions
+
+## 📖 Documentation
+
+### API Reference
+
+#### BlogEditor Component
+
+```tsx
+interface BlogEditorProps {
+  initialState?: BlogEditorState;
+  onExport?: (data: BlogEditorState) => void;
+  onValidationError?: (errors: ValidationError[]) => void;
+}
+```
+
+#### Data Types
+
+```tsx
+interface BlogEditorState {
+  cards: Card[];
+}
+
+interface Card {
+  id: string;
+  content: string;
+  subcards: SubCard[];
+  isDefault?: boolean;
+}
+
+interface SubCard {
+  id: string;
+  type: SubCardType;
+  data: SubCardData;
+}
+
+type SubCardType = 
+  | 'text'
+  | 'blockquote'
+  | 'cta'
+  | 'bigFact'
+  | 'blurp'
+  | 'question'
+  | 'qa'
+  | 'summary'
+  | 'image'
+  | 'alsoRead'
+  | 'quote'
+  | 'embed'
+  | 'table';
+```
+
+### Styling & Customization
+
+NextGen Blog Editor uses Tailwind CSS internally, but all styles are pre-compiled. You can customize the appearance using:
+
+1. **CSS Override**:
+```css
+/* Override specific components */
+.blog-editor-card {
+  background: #f5f5f5;
+}
+```
+
+2. **Inline Styles**:
+```tsx
+<div style={{ background: '#f0f0f0' }}>
+  <BlogEditor />
+</div>
+```
+
+3. **CSS Modules**:
+```tsx
+import styles from './Editor.module.css';
+
+<div className={styles.editorWrapper}>
+  <BlogEditor />
+</div>
+```
+
+## 🐛 Troubleshooting
+
+### CSS Not Loading?
+
+Make sure to import the CSS file:
+```tsx
+import 'nextgen-blog-editor/style.css';
+```
+
+### TypeScript Errors?
+
+Ensure your `tsconfig.json` includes:
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler" // or "node"
+  }
+}
+```
+
+### Next.js SSR Issues?
+
+Use `'use client'` directive for App Router:
+```tsx
+'use client';
+
+import { BlogEditor } from 'nextgen-blog-editor';
+```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly (see TESTING_GUIDE.md)
-5. Submit a pull request
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT © [Jithvar Consultancy Services](https://jithvar.com)
 
-## 🙏 Acknowledgments
+## 🔗 Links
 
-- React team for React 19
-- Tailwind CSS for the styling framework
-- @dnd-kit for drag and drop functionality
-- React Quill for rich text editing
-- Lucide for the icon set
+- **NPM Package**: https://www.npmjs.com/package/nextgen-blog-editor
+- **GitHub Repository**: https://github.com/jais-nikhil/nextgen-blog-editor
+- **Documentation**: https://github.com/jais-nikhil/nextgen-blog-editor#readme
+- **Issues**: https://github.com/jais-nikhil/nextgen-blog-editor/issues
+- **Changelog**: [CHANGELOG.md](CHANGELOG.md)
+
+## 🌟 Show Your Support
+
+Give a ⭐️ if this project helped you!
+
+## 📊 Stats
+
+![NPM](https://img.shields.io/npm/l/nextgen-blog-editor)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/nextgen-blog-editor)
+![npm](https://img.shields.io/npm/v/nextgen-blog-editor)
+![npm](https://img.shields.io/npm/dt/nextgen-blog-editor)
+![GitHub stars](https://img.shields.io/github/stars/jais-nikhil/nextgen-blog-editor?style=social)
+
+## 🏷️ Keywords
+
+`react blog editor`, `next.js blog editor`, `nextgen blog editor`, `wysiwyg editor`, `rich text editor`, `react wysiwyg`, `next wysiwyg`, `blog cms`, `content editor`, `react cms`, `nextjs cms`, `tiptap react`, `drag and drop editor`, `modular editor`, `typescript editor`, `react content editor`, `nextjs content editor`, `modern blog editor`, `seo blog editor`, `responsive editor`
 
 ---
 
-**Version**: 2.0.0  
-**Last Updated**: November 28, 2025  
-**Status**: ✅ Production Ready
+**Made with ❤️ by [Jithvar Consultancy Services](https://jithvar.com)**

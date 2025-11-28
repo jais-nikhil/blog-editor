@@ -1,4 +1,7 @@
 // Main entry point for the blog editor plugin
+// Import styles
+import '../src/index.css';
+
 export { default as BlogEditor } from '../src/components/BlogEditor';
 export { default as Card } from '../src/components/Card';
 export { default as RichTextEditor } from '../src/components/RichTextEditor';

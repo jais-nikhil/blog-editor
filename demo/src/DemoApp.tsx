@@ -1,17 +1,7 @@
-import React, { useState } from 'react';
 import BlogEditor from '../../src/components/BlogEditor';
-import type { BlogEditorState } from '../../src/types';
 import '../../src/index.css';
 
 function DemoApp() {
-  const [showExport, setShowExport] = useState(false);
-  const [exportedData, setExportedData] = useState<BlogEditorState | null>(null);
-
-  const handleExport = (data: BlogEditorState) => {
-    setExportedData(data);
-    setShowExport(true);
-    console.log('Exported data:', data);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -29,7 +19,7 @@ function DemoApp() {
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
               <a
-                href="https://github.com/jais-nikhil/blog-editor"
+                href="https://github.com/jais-nikhil/nextgen-blog-editor"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-200 hover:scale-105 text-sm font-medium shadow-lg hover:shadow-xl"
@@ -40,7 +30,7 @@ function DemoApp() {
                 <span className="hidden sm:inline">GitHub</span>
               </a>
               <a
-                href="https://www.npmjs.com/package/@jais-nikhil/react-blog-editor"
+                href="https://www.npmjs.com/package/nextgen-blog-editor"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 hover:scale-105 text-sm font-medium shadow-lg hover:shadow-xl"
@@ -57,20 +47,20 @@ function DemoApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             <div className="text-center transform hover:scale-110 transition-transform">
-              <div className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2">13+</div>
-              <div className="text-xs sm:text-sm opacity-90 font-medium">Content Types</div>
+              <div className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 text-white">13+</div>
+              <div className="text-xs sm:text-sm text-white opacity-90 font-medium">Content Types</div>
             </div>
             <div className="text-center transform hover:scale-110 transition-transform">
               <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">✅</div>
-              <div className="text-xs sm:text-sm opacity-90 font-medium">Validation</div>
+              <div className="text-xs sm:text-sm text-white opacity-90 font-medium">Validation</div>
             </div>
             <div className="text-center transform hover:scale-110 transition-transform">
               <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎨</div>
-              <div className="text-xs sm:text-sm opacity-90 font-medium">Customizable</div>
+              <div className="text-xs sm:text-sm text-white opacity-90 font-medium">Customizable</div>
             </div>
             <div className="text-center transform hover:scale-110 transition-transform">
               <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">⚡</div>
-              <div className="text-xs sm:text-sm opacity-90 font-medium">Fast</div>
+              <div className="text-xs sm:text-sm text-white opacity-90 font-medium">Fast</div>
             </div>
           </div>
         </div>
@@ -89,9 +79,9 @@ function DemoApp() {
                 <span className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shadow-md">1</span>
                 Install the package
               </h3>
-              <div className="bg-gray-800 border border-gray-700 p-4 rounded-lg shadow-md">
-                <code className="text-green-400 font-mono text-sm block">
-                  npm install @jais-nikhil/react-blog-editor
+              <div className="bg-gray-600 border border-gray-500 p-4 rounded-lg shadow-md">
+                <code className="text-white font-mono text-sm block">
+                  npm install nextgen-blog-editor
                 </code>
               </div>
             </div>
@@ -100,10 +90,10 @@ function DemoApp() {
                 <span className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shadow-md">2</span>
                 Import and use
               </h3>
-              <div className="bg-gray-800 border border-gray-700 p-4 rounded-lg shadow-md">
-                <pre className="text-gray-100 font-mono text-sm leading-relaxed overflow-x-auto">
-{`import { BlogEditor } from '@jais-nikhil/react-blog-editor';
-import '@jais-nikhil/react-blog-editor/dist/style.css';
+              <div className="bg-gray-600 border border-gray-500 p-4 rounded-lg shadow-md">
+                <pre className="text-white font-mono text-sm leading-relaxed overflow-x-auto">
+{`import { BlogEditor } from 'nextgen-blog-editor';
+import 'nextgen-blog-editor/style.css';
 
 function App() {
   return <BlogEditor />;
@@ -116,38 +106,29 @@ function App() {
 
         {/* Demo Editor */}
         <div className="bg-white rounded-xl shadow-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 border border-gray-100">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl sm:text-4xl">🎨</span>
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Live Demo</h2>
-            </div>
-            <button
-              onClick={() => setShowExport(!showExport)}
-              className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all hover:scale-105 shadow-md text-sm sm:text-base font-medium"
-            >
-              {showExport ? '👁️ Hide' : '👁️ Show'} Export
-            </button>
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
+            <span className="text-3xl sm:text-4xl">🎨</span>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Live Interactive Demo</h2>
           </div>
           
-          <div className="border-2 border-dashed border-gray-200 rounded-lg p-2 sm:p-4">
+          <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-2 sm:p-4">
             <BlogEditor />
           </div>
-        </div>
-
-        {/* Export Preview */}
-        {showExport && exportedData && (
-          <div className="bg-white rounded-xl shadow-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 border border-gray-100">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl sm:text-4xl">📤</span>
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Exported Data</h2>
-            </div>
-            <div className="bg-gray-800 border border-gray-700 p-4 sm:p-6 rounded-lg shadow-md max-h-96 overflow-auto">
-              <pre className="text-green-400 font-mono text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-words">
-                {JSON.stringify(exportedData, null, 2)}
-              </pre>
-            </div>
+          
+          <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-indigo-500 rounded-lg shadow-sm">
+            <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <span className="text-xl">💡</span>
+              <span>How to use the demo:</span>
+            </h3>
+            <ul className="text-sm text-gray-700 space-y-1 ml-6 list-disc">
+              <li>Click "Add Card" to create new content blocks</li>
+              <li>Click the "+" button to add different content types (Text, Image, CTA, etc.)</li>
+              <li>Drag and drop cards to reorder them</li>
+              <li>Click "Export JSON" button to see the data structure in your browser console</li>
+              <li>Form validation will show inline errors for incomplete fields</li>
+            </ul>
           </div>
-        )}
+        </div>
 
         {/* Features Grid */}
         <div className="mb-6 sm:mb-8">
@@ -196,7 +177,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-lg sm:text-xl font-medium mb-3 text-gray-100">
-              Made with <span className="text-red-500 animate-pulse">❤️</span> by <span className="text-indigo-400 font-bold">Nikhil Jais</span>
+              Developed by <a href="https://jithvar.com" target="_blank" rel="noopener noreferrer" className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors underline decoration-2 underline-offset-2">Jithvar Consultancy Services</a>
             </p>
             <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm sm:text-base text-gray-300 mb-4 flex-wrap">
               <span className="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg">
@@ -206,7 +187,7 @@ function App() {
                 <span className="text-gray-200">MIT License</span>
               </span>
               <a 
-                href="https://github.com/jais-nikhil/blog-editor" 
+                href="https://github.com/jais-nikhil/nextgen-blog-editor" 
                 className="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">

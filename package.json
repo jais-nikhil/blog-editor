@@ -1,11 +1,21 @@
 {
-  "name": "@jais-nikhil/react-blog-editor",
+  "name": "nextgen-blog-editor",
   "version": "1.0.0",
-  "description": "A powerful and flexible blog editor component for React and Next.js with rich text editing, drag-and-drop, and 12+ content types",
+  "description": "A powerful and flexible blog editor component for React and Next.js with rich text editing, drag-and-drop, and 13+ content types. Modern WYSIWYG editor with validation, image editing, and responsive design.",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/lib/index.d.ts",
+  "style": "./dist/nextgen-blog-editor.css",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.js"
+    },
+    "./style.css": "./dist/nextgen-blog-editor.css",
+    "./dist/style.css": "./dist/nextgen-blog-editor.css"
+  },
   "files": [
     "dist",
     "README.md",
@@ -14,25 +24,53 @@
   "keywords": [
     "react",
     "nextjs",
-    "blog",
-    "editor",
+    "next.js",
+    "blog editor",
+    "react blog editor",
+    "next blog editor",
+    "nextgen blog editor",
     "wysiwyg",
-    "rich-text",
-    "content-editor",
-    "drag-and-drop",
+    "wysiwyg editor",
+    "rich text editor",
+    "content editor",
+    "cms editor",
+    "blog cms",
+    "drag and drop",
+    "drag-and-drop editor",
     "tiptap",
-    "tailwindcss"
+    "tiptap editor",
+    "tailwindcss",
+    "react component",
+    "nextjs component",
+    "blog post editor",
+    "article editor",
+    "content management",
+    "markdown editor",
+    "text editor",
+    "visual editor",
+    "inline editing",
+    "content blocks",
+    "modular editor",
+    "typescript",
+    "react typescript",
+    "validation",
+    "form validation",
+    "image editor",
+    "image crop",
+    "responsive editor",
+    "modern editor",
+    "seo friendly editor"
   ],
   "author": "Nikhil Jais",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jais-nikhil/blog-editor.git"
+    "url": "git+https://github.com/jais-nikhil/nextgen-blog-editor.git"
   },
   "bugs": {
-    "url": "https://github.com/jais-nikhil/blog-editor/issues"
+    "url": "https://github.com/jais-nikhil/nextgen-blog-editor/issues"
   },
-  "homepage": "https://github.com/jais-nikhil/blog-editor#readme",
+  "homepage": "https://github.com/jais-nikhil/nextgen-blog-editor#readme",
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"

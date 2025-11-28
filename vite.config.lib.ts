@@ -8,6 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  css: {
+    postcss: './postcss.config.js',
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'lib/index.ts'),
@@ -15,6 +18,7 @@ export default defineConfig({
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format === 'es' ? 'es.js' : 'js'}`,
     },
+    cssCodeSplit: false,
     rollupOptions: {
       // Externalize dependencies that shouldn't be bundled
       external: [

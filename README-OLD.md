@@ -40,9 +40,9 @@ pnpm add @jais-nikhil/react-blog-editor
 ### Basic Usage (React)
 
 ```tsx
-import React from "react";
-import { BlogEditor } from "@jais-nikhil/react-blog-editor";
-import "@jais-nikhil/react-blog-editor/dist/style.css";
+import React from 'react';
+import { BlogEditor } from '@jais-nikhil/react-blog-editor';
+import '@jais-nikhil/react-blog-editor/dist/style.css';
 
 function App() {
   return (
@@ -58,13 +58,13 @@ export default App;
 ### Next.js Usage
 
 ```tsx
-"use client";
+'use client';
 
-import dynamic from "next/dynamic";
-import "@jais-nikhil/react-blog-editor/dist/style.css";
+import dynamic from 'next/dynamic';
+import '@jais-nikhil/react-blog-editor/dist/style.css';
 
 const BlogEditor = dynamic(
-  () => import("@jais-nikhil/react-blog-editor").then((mod) => mod.BlogEditor),
+  () => import('@jais-nikhil/react-blog-editor').then(mod => mod.BlogEditor),
   { ssr: false }
 );
 
@@ -100,14 +100,14 @@ The editor supports 13 different content types:
 ### With Custom Initial State
 
 ```tsx
-import { BlogEditor } from "@jais-nikhil/react-blog-editor";
-import type { BlogEditorState } from "@jais-nikhil/react-blog-editor";
+import { BlogEditor } from '@jais-nikhil/react-blog-editor';
+import type { BlogEditorState } from '@jais-nikhil/react-blog-editor';
 
 const initialState: BlogEditorState = {
   cards: [
     {
-      id: "1",
-      content: "<p>Welcome to my blog!</p>",
+      id: '1',
+      content: '<p>Welcome to my blog!</p>',
       subcards: [],
     },
   ],
@@ -121,11 +121,11 @@ function App() {
 ### Handling Submit/Export
 
 ```tsx
-import { BlogEditor } from "@jais-nikhil/react-blog-editor";
+import { BlogEditor } from '@jais-nikhil/react-blog-editor';
 
 function App() {
   const handleExport = (data: BlogEditorState) => {
-    console.log("Blog content:", data);
+    console.log('Blog content:', data);
     // Send to your API or save to database
   };
 
@@ -136,15 +136,15 @@ function App() {
 ### Using Individual Components
 
 ```tsx
-import {
-  RichTextEditor,
-  CTASubCard,
-  ImageSubCard,
-} from "@jais-nikhil/react-blog-editor";
+import { 
+  RichTextEditor, 
+  CTASubCard, 
+  ImageSubCard 
+} from '@jais-nikhil/react-blog-editor';
 
 function CustomEditor() {
-  const [content, setContent] = useState("");
-
+  const [content, setContent] = useState('');
+  
   return (
     <div>
       <RichTextEditor
@@ -152,9 +152,9 @@ function CustomEditor() {
         onChange={setContent}
         placeholder="Start writing..."
       />
-
+      
       <CTASubCard
-        data={{ title: "Click me!", actionUrl: "https://example.com" }}
+        data={{ title: 'Click me!', actionUrl: 'https://example.com' }}
         onUpdate={(data) => console.log(data)}
         onDelete={() => {}}
         onMoveUp={() => {}}
@@ -179,8 +179,8 @@ Update your `tailwind.config.js`:
 ```js
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/@jais-nikhil/react-blog-editor/**/*.js",
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@jais-nikhil/react-blog-editor/**/*.js',
   ],
   theme: {
     extend: {},
@@ -193,11 +193,11 @@ module.exports = {
 
 ### BlogEditor Props
 
-| Prop           | Type                              | Default     | Description                       |
-| -------------- | --------------------------------- | ----------- | --------------------------------- |
-| `initialState` | `BlogEditorState`                 | `undefined` | Initial editor state with cards   |
-| `onExport`     | `(data: BlogEditorState) => void` | `undefined` | Callback when content is exported |
-| `className`    | `string`                          | `''`        | Additional CSS classes            |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `initialState` | `BlogEditorState` | `undefined` | Initial editor state with cards |
+| `onExport` | `(data: BlogEditorState) => void` | `undefined` | Callback when content is exported |
+| `className` | `string` | `''` | Additional CSS classes |
 
 ### Types
 
@@ -213,7 +213,7 @@ interface SubCard {
   id: string;
   type: string;
   data: Record<string, any>;
-  position: "top" | "bottom";
+  position: 'top' | 'bottom';
 }
 
 interface BlogEditorState {
@@ -225,7 +225,7 @@ interface BlogEditorState {
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18+ 
 - npm/yarn/pnpm
 
 ### Setup
