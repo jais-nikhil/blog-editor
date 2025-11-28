@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { X, Save, RotateCcw, ChevronDown, ChevronRight, Crop } from 'lucide-react';
+import { X, Download, Edit, Save, RotateCcw, RotateCw, Sun, Filter, ChevronDown, ChevronRight, Crop } from 'lucide-react';
 import { uploadImage } from '../utils/helpers';
 
 interface ImageEditorProps {
@@ -30,6 +30,16 @@ const aspectRatios = [
   { name: 'Custom', ratio: null, label: 'Free Form' }
 ];
 
+const imageFilters = [
+  { name: 'none', label: 'None', filter: '' },
+  { name: 'grayscale', label: 'Grayscale', filter: 'grayscale(100%)' },
+  { name: 'sepia', label: 'Sepia', filter: 'sepia(100%)' },
+  { name: 'blur', label: 'Blur', filter: 'blur(2px)' },
+  { name: 'vintage', label: 'Vintage', filter: 'sepia(50%) contrast(120%) brightness(110%)' },
+  { name: 'cold', label: 'Cold', filter: 'hue-rotate(90deg) saturate(120%)' },
+  { name: 'warm', label: 'Warm', filter: 'hue-rotate(-30deg) saturate(110%)' }
+];
+
 const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, onSave }) => {
   const [isEditing, setIsEditing] = useState(true);
   const [caption, setCaption] = useState('');
@@ -45,6 +55,15 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
   
   // Collapsible panel states
   const [showCrop, setShowCrop] = useState(true);
+  const [showAdjustments, setShowAdjustments] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Editing features state
+  const [rotation, setRotation] = useState(0);
+  const [brightness, setBrightness] = useState(100);
+  const [contrast, setContrast] = useState(100);
+  const [saturation, setSaturation] = useState(100);
+  const [selectedFilter, setSelectedFilter] = useState('none');
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -126,6 +145,12 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
     
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+    
+    // If not actively dragging or resizing, check for hover states
+    if (!isDragging && !isResizing && isEditing) {
+      // You could add hover state logic here if needed
+      // For now, we'll just handle the active states
+    }
     
     if ((!isDragging && !isResizing) || !isEditing) return;
     
@@ -303,6 +328,38 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
     }, 'image/png');
   };
 
+  const downloadImage = () => {
+    if (!imageUrl) return;
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'image.png';
+    link.click();
+  };
+
+  const resetAllAdjustments = () => {
+    setRotation(0);
+    setBrightness(100);
+    setContrast(100);
+    setSaturation(100);
+    setSelectedFilter('none');
+  };
+
+  const rotateImage = (degrees: number) => {
+    setRotation(prev => (prev + degrees) % 360);
+  };
+
+  const getImageStyle = () => {
+    const filterValue = imageFilters.find(f => f.name === selectedFilter)?.filter || '';
+    const customFilters = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
+    const combinedFilters = filterValue ? `${filterValue} ${customFilters}` : customFilters;
+    
+    return {
+      transform: `rotate(${rotation}deg)`,
+      filter: combinedFilters,
+      transition: 'all 0.3s ease'
+    };
+  };
+
   if (!isOpen || !imageUrl) return null;
 
   return (
@@ -457,75 +514,76 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, imageUrl, on
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseUp}
                 >
-                  <img
-                    ref={imageRef}
-                    src={imageUrl}
-                    alt="Preview"
-                    className="w-full h-full object-contain"
-                    draggable={false}
-                  />
+                <img
+                  ref={imageRef}
+                  src={imageUrl}
+                  alt="Preview"
+                  className="w-full h-full object-contain"
+                  draggable={false}
+                  style={getImageStyle()}
+                />
+                
+                {/* Crop Overlay */}
+                <div className="absolute inset-0 bg-black bg-opacity-40" />
+                
+                {/* Crop Selection */}
+                <div
+                  className={`absolute border-2 bg-transparent transition-all duration-150 ${
+                    isResizing 
+                      ? 'border-blue-400 shadow-lg cursor-crosshair' 
+                      : isDragging 
+                        ? 'border-green-400 shadow-md cursor-grabbing'
+                        : 'border-white cursor-move hover:border-blue-300'
+                  }`}
+                  style={{
+                    left: cropArea.x,
+                    top: cropArea.y,
+                    width: cropArea.width,
+                    height: cropArea.height,
+                  }}
+                  onMouseDown={handleMouseDown}
+                >
+                  {/* Grid lines */}
+                  <div className="absolute top-0 left-1/3 w-px h-full bg-white opacity-50" />
+                  <div className="absolute top-0 left-2/3 w-px h-full bg-white opacity-50" />
+                  <div className="absolute top-1/3 left-0 w-full h-px bg-white opacity-50" />
+                  <div className="absolute top-2/3 left-0 w-full h-px bg-white opacity-50" />
                   
-                  {/* Crop Overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-40" />
-                  
-                  {/* Crop Selection */}
-                  <div
-                    className={`absolute border-2 bg-transparent transition-all duration-150 ${
-                      isResizing 
-                        ? 'border-blue-400 shadow-lg cursor-crosshair' 
-                        : isDragging 
-                          ? 'border-green-400 shadow-md cursor-grabbing'
-                          : 'border-white cursor-move hover:border-blue-300'
+                  {/* Corner resize handles */}
+                  <div 
+                    className={`absolute -top-2 -left-2 w-6 h-6 rounded-full cursor-nw-resize shadow-lg transition-all duration-150 ${
+                      isResizing && resizeHandle === 'nw'
+                        ? 'bg-blue-500 border-2 border-blue-600 scale-110'
+                        : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
                     }`}
-                    style={{
-                      left: cropArea.x,
-                      top: cropArea.y,
-                      width: cropArea.width,
-                      height: cropArea.height,
-                    }}
-                    onMouseDown={handleMouseDown}
-                  >
-                    {/* Grid lines */}
-                    <div className="absolute top-0 left-1/3 w-px h-full bg-white opacity-50" />
-                    <div className="absolute top-0 left-2/3 w-px h-full bg-white opacity-50" />
-                    <div className="absolute top-1/3 left-0 w-full h-px bg-white opacity-50" />
-                    <div className="absolute top-2/3 left-0 w-full h-px bg-white opacity-50" />
-                    
-                    {/* Corner resize handles */}
-                    <div 
-                      className={`absolute -top-2 -left-2 w-6 h-6 rounded-full cursor-nw-resize shadow-lg transition-all duration-150 ${
-                        isResizing && resizeHandle === 'nw'
-                          ? 'bg-blue-500 border-2 border-blue-600 scale-110'
-                          : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
-                      }`}
-                      style={{ transform: 'translate(-50%, -50%)' }}
-                    />
-                    <div 
-                      className={`absolute -top-2 -right-2 w-6 h-6 rounded-full cursor-ne-resize shadow-lg transition-all duration-150 ${
-                        isResizing && resizeHandle === 'ne'
-                          ? 'bg-blue-500 border-2 border-blue-600 scale-110'
-                          : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
-                      }`}
-                      style={{ transform: 'translate(50%, -50%)' }}
-                    />
-                    <div 
-                      className={`absolute -bottom-2 -left-2 w-6 h-6 rounded-full cursor-sw-resize shadow-lg transition-all duration-150 ${
-                        isResizing && resizeHandle === 'sw'
-                          ? 'bg-blue-500 border-2 border-blue-600 scale-110'
-                          : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
-                      }`}
-                      style={{ transform: 'translate(-50%, 50%)' }}
-                    />
-                    <div 
-                      className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full cursor-se-resize shadow-lg transition-all duration-150 ${
-                        isResizing && resizeHandle === 'se'
-                          ? 'bg-blue-500 border-2 border-blue-600 scale-110'
-                          : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
-                      }`}
-                      style={{ transform: 'translate(50%, 50%)' }}
-                    />
-                  </div>
+                    style={{ transform: 'translate(-50%, -50%)' }}
+                  />
+                  <div 
+                    className={`absolute -top-2 -right-2 w-6 h-6 rounded-full cursor-ne-resize shadow-lg transition-all duration-150 ${
+                      isResizing && resizeHandle === 'ne'
+                        ? 'bg-blue-500 border-2 border-blue-600 scale-110'
+                        : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
+                    }`}
+                    style={{ transform: 'translate(50%, -50%)' }}
+                  />
+                  <div 
+                    className={`absolute -bottom-2 -left-2 w-6 h-6 rounded-full cursor-sw-resize shadow-lg transition-all duration-150 ${
+                      isResizing && resizeHandle === 'sw'
+                        ? 'bg-blue-500 border-2 border-blue-600 scale-110'
+                        : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
+                    }`}
+                    style={{ transform: 'translate(-50%, 50%)' }}
+                  />
+                  <div 
+                    className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full cursor-se-resize shadow-lg transition-all duration-150 ${
+                      isResizing && resizeHandle === 'se'
+                        ? 'bg-blue-500 border-2 border-blue-600 scale-110'
+                        : 'bg-white border-2 border-blue-500 hover:bg-blue-50 hover:scale-105'
+                    }`}
+                    style={{ transform: 'translate(50%, 50%)' }}
+                  />
                 </div>
+              </div>
               </div>
             </div>
           </div>
